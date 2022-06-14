@@ -1,0 +1,293 @@
+#include <iostream>
+#include <stack>
+#include <queue>
+
+using namespace std;
+
+union type
+{
+    double _double;     // occupies 4 bytes
+    int _int; // occupies 4 bytes
+    bool _bool;     // occupies 1 byte
+};
+
+class Graf_DFS
+{
+protected:
+    int n, m;
+    bool A[100][100];
+    bool odwiedzone[100];
+
+    virtual void sprawdz_wierzcholki(int wierzch, int i) {};
+    virtual void sprawdz_nieodwiedzone_wierzcholki(int wierzch, int i) {};
+
+public:
+    Graf_DFS();
+    ~Graf_DFS() {};
+
+    int value_m()
+    {
+        return m;
+    }
+    int value_n()
+    {
+        return n;
+    }
+
+    bool value_A(int i, int j)
+    {
+        return A[i][j];
+    }
+
+
+    void Wczytaj();
+    void ZerujTablice();
+    void PrzejdzGraf(int poczatek=0);
+    virtual type Sprawdz()
+    {
+        PrzejdzGraf();
+    };
+
+
+};
+
+Graf_DFS::Graf_DFS()
+{
+    n=0;
+    m=0;
+    for(int i=0; i<100; ++i)
+    {
+        odwiedzone[i]=0;
+
+        for(int j=0; j<100; ++j)
+        {
+            A[i][j]=0;
+        }
+    }
+}
+
+
+void Graf_DFS::Wczytaj()
+{
+    cin>> n>>m;
+
+    for(int i=0; i<m; ++i)
+    {
+        int a, b;
+        cin>>a>>b;
+
+        A[a][b]=1;
+        A[b][a]=1;
+    }
+}
+
+void Graf_DFS::ZerujTablice()
+{
+    n=0;
+    m=0;
+    for(int i=0; i<100; ++i)
+    {
+        odwiedzone[i]=0;
+
+        for(int j=0; j<100; ++j)
+        {
+            A[i][j]=0;
+        }
+    }
+}
+
+void Graf_DFS::PrzejdzGraf(int poczatek)
+{
+    int tmp, i;
+    int wierzch;
+    stack<int> S;
+    S.push(poczatek);
+    i=0;
+
+    while(!S.empty())
+    {
+
+        wierzch=S.top();
+        S.pop();
+
+
+        if(odwiedzone[wierzch]==false)
+        {
+            odwiedzone[wierzch]=true;
+
+
+            for( i=0; i<n; ++i)
+            {
+                if( A[wierzch][i]==true)
+                {
+                    sprawdz_wierzcholki(wierzch, i);
+
+                    if(odwiedzone[i] == false)
+                    {
+                        S.push(i);
+                        sprawdz_nieodwiedzone_wierzcholki(wierzch, i);
+                    }
+
+                }
+            }
+        }
+    }
+}
+
+
+
+
+
+
+
+class CzySpojny : public Graf_DFS
+{
+protected:
+    type spojny;
+    void sprawdz_wierzcholki(int wierzch, int i) {};
+    void sprawdz_nieodwiedzone_wierzcholki(int wierzch, int i) {};
+
+public:
+    CzySpojny()
+        : Graf_DFS() {};
+
+    CzySpojny(Graf_DFS *G)
+        : Graf_DFS()
+    {
+        n=G->value_n();
+        m=G->value_m();
+
+        for(int i=0; i<100; ++i)
+        {
+            for(int j=0; j<100; ++j)
+            {
+                A[i][j]=G->value_A(i, j);
+            }
+        }
+
+    };
+
+    ~CzySpojny() {};
+
+    type Sprawdz();
+    type oblicz();
+};
+
+type CzySpojny::oblicz()
+{
+
+    for(int i=0; i<100; ++i)
+    {
+        odwiedzone[i]=0;
+    }
+
+    PrzejdzGraf();
+
+    spojny._bool=true;
+
+    for(int i=0; i<n; ++i)
+    {
+        if(odwiedzone[i]==false)
+        {
+            spojny._bool=false;
+            break;
+        }
+    }
+
+
+    return spojny;
+}
+
+type CzySpojny::Sprawdz()
+{
+    return oblicz();
+}
+
+class CzyDrzewo : public CzySpojny
+{
+
+public:
+    CzyDrzewo()
+        : CzySpojny() {};
+
+    CzyDrzewo(Graf_DFS *G)
+        : CzySpojny()
+    {
+        n=G->value_n();
+        m=G->value_m();
+
+        for(int i=0; i<100; ++i)
+        {
+            for(int j=0; j<100; ++j)
+            {
+                A[i][j]=G->value_A(i, j);
+            }
+        }
+
+    };
+
+    ~CzyDrzewo() {};
+
+    type Sprawdz();
+    type licz();
+
+};
+
+type CzyDrzewo::licz()
+{
+    type wynik;
+
+    if((n-m==1) && oblicz()._bool)
+    {
+        wynik._bool=true;
+    }
+    else
+    {
+        wynik._bool=false;
+    }
+
+
+    return  wynik;
+}
+
+
+type CzyDrzewo::Sprawdz()
+{
+    return licz();
+}
+
+
+
+int main()
+{
+
+    int n;
+    cin>>n;
+
+    Graf_DFS **G;
+    G=new Graf_DFS*[n];
+
+    for(int i=0; i<n; ++i)
+    {
+        G[i]=new Graf_DFS;
+        G[i]->Wczytaj();
+    }
+
+
+    for(int i=0; i<n; ++i)
+    {
+        G[i]=new CzyDrzewo(G[i]);
+
+        if(G[i]->Sprawdz()._bool)
+        {
+            cout<<"TAK"<<endl;
+        }else
+        {
+            cout<<"NIE"<<endl;
+        }
+    }
+
+
+
+    return 0;
+}

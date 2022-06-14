@@ -1,0 +1,9 @@
+wymagane biblioteki:
+from datetime import datetime
+from dateutil.parser import parse
+
+import sqlite3
+from sqlite3 import Error
+
+wymagane:
+podanie lokalizacji do pliku budgetCalculator\db.db

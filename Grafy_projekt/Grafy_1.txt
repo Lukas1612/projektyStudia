@@ -1,0 +1,200 @@
+#include <iostream>
+#include <stack>
+#include <queue>
+
+using namespace std;
+
+class Graf
+{
+protected:
+    int n, m;
+    bool A[100][100];
+
+public:
+    Graf();
+    void wczytaj();
+    void ZerujTablice();
+};
+
+
+class DFS : public Graf
+{
+protected:
+    bool odwiedzone[100];
+
+public:
+    DFS()
+    {
+        for(int i=0; i<100; ++i)
+        {
+            odwiedzone[i]=0;
+        }
+    }
+
+    void ZerujTablice();
+    void PrzejdzGraf(int poczatek);
+
+    virtual void test1(int wierzch)=0;
+    virtual void test2(int wierzch)=0;
+    virtual void test4(int wierzch, int i)=0;
+    virtual void test3(int wierzch, int i)=0;
+    virtual void prepare()=0;
+};
+
+void DFS::ZerujTablice()
+{
+    Graf *G;
+    G=this;
+    this->ZerujTablice();
+
+    for(int i=0; i<100; ++i)
+    {
+        odwiedzone[i]=0;
+    }
+}
+
+
+class CzyDwudzielny : public DFS
+{
+protected:
+    int kolory[100];
+     bool czyDwudzielny;
+public:
+
+    bool getCzyDwudzielny()
+    {
+        return czyDwudzielny;
+    };
+
+    void ZerujTablice();
+    void test1(int wierzch) {};
+    void test2(int wierzch) {};
+    void test3(int wierzch, int i)
+    {
+        if(kolory[i] == 0)
+            kolory[i] = -kolory[wierzch];
+        if(kolory[i] == kolory[wierzch])
+            czyDwudzielny = false;
+    };
+    void test4(int wierzch, int i) {};
+
+    void prepare()
+    {
+        czyDwudzielny=true;
+
+        for(int i = 0; i < n; i++)
+            kolory[i] = 0;
+
+        kolory[0] = 1;
+
+    }
+
+};
+
+
+Graf::Graf()
+{
+    for(int i=0; i<100; ++i)
+    {
+        for(int j=0; j<100; ++j)
+        {
+            A[i][j]=0;
+        }
+    }
+}
+
+void Graf::ZerujTablice()
+{
+    for(int i=0; i<100; ++i)
+    {
+        for(int j=0; j<100; ++j)
+        {
+            A[i][j]=0;
+        }
+    }
+}
+
+void Graf::wczytaj()
+{
+    cin>> n>>m;
+
+    for(int i=0; i<m; ++i)
+    {
+        int a, b;
+        cin>>a>>b;
+
+        A[a][b]=1;
+        A[b][a]=1;
+    }
+}
+
+
+void DFS::PrzejdzGraf(int poczatek)
+{
+    int tmp, i;
+    int wierzch;
+    stack<int> S;
+    S.push(poczatek);
+    i=0;
+
+    prepare();
+
+    while(!S.empty())
+    {
+
+        wierzch=S.top();
+
+        S.pop();
+
+        test1(wierzch);
+
+        if(odwiedzone[wierzch]==false)
+        {
+            odwiedzone[wierzch]=true;
+
+            test2(wierzch);
+
+            for( i=0; i<n; ++i)
+            {
+                if( A[wierzch][i]==true)
+                {
+                    test3(wierzch, i);
+
+                    if(odwiedzone[i] == false)
+                    {
+                        S.push(i);
+
+                        test4(wierzch, i);
+                    }
+
+                }
+            }
+        }
+    }
+}
+
+
+void CzyDwudzielny::ZerujTablice()
+{
+
+    DFS *D;
+    D=this;
+    D->ZerujTablice();
+
+    for(int i=0; i<100; ++i)
+    {
+        kolory[i]=0;
+    }
+
+}
+
+int main()
+{
+    CzyDwudzielny G;
+    G.wczytaj();
+    G.PrzejdzGraf(0);
+
+    cout<<G.getCzyDwudzielny()<<endl;
+
+    return 0;
+}

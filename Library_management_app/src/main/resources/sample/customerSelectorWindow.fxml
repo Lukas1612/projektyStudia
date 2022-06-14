@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox prefHeight="400.0" prefWidth="640.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1"  fx:controller="sample.customerSelectorWidnowConroller">
+  <children>
+    <AnchorPane maxHeight="-1.0" maxWidth="-1.0" prefHeight="-1.0" prefWidth="-1.0" VBox.vgrow="ALWAYS">
+         <children>
+            <ListView fx:id="listView" layoutX="43.0" layoutY="39.0" prefHeight="292.0" prefWidth="277.0" />
+            <Button layoutX="422.0" layoutY="175.0" mnemonicParsing="false" text="select customer" onAction="#selectCustomer" />
+            <Button layoutX="472.0" layoutY="331.0" mnemonicParsing="false" text="back" onAction="#back" />
+         </children>
+    </AnchorPane>
+  </children>
+</VBox>

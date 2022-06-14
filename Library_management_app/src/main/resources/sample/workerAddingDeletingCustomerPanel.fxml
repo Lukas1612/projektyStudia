@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox prefHeight="400.0" prefWidth="640.0" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.workerAddingDeletingCustomerController">
+  <children>
+    <AnchorPane maxHeight="-1.0" maxWidth="-1.0" prefHeight="-1.0" prefWidth="-1.0" VBox.vgrow="ALWAYS">
+         <children>
+            <ListView fx:id="listView" layoutX="40.0" layoutY="64.0" prefHeight="305.0" prefWidth="267.0" />
+            <Label layoutX="87.0" layoutY="35.0" text="list of customers" />
+            <Button layoutX="320.0" layoutY="142.0" mnemonicParsing="false" onAction="#add" prefHeight="25.0" prefWidth="49.0" text="add" />
+            <Button layoutX="320.0" layoutY="188.0" mnemonicParsing="false" text="delate" onAction="#delate" />
+            <Button layoutX="579.0" layoutY="357.0" mnemonicParsing="false" text="back" onAction="#back" />
+            <TextField fx:id="loginField" layoutX="391.0" layoutY="117.0" />
+            <TextField fx:id="passwordField" layoutX="391.0" layoutY="176.0" />
+            <TextField fx:id="passwordField2" layoutX="391.0" layoutY="231.0" />
+            <Label layoutX="549.0" layoutY="121.0" text="login" />
+            <Label layoutX="549.0" layoutY="180.0" text="password" />
+            <Label layoutX="549.0" layoutY="235.0" text="repeat password" />
+            <Label fx:id="message" layoutX="452.0" layoutY="275.0" />
+         </children>
+    </AnchorPane>
+  </children>
+</VBox>

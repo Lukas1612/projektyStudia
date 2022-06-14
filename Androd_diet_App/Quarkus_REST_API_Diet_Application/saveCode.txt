@@ -1,0 +1,468 @@
+package org.acme;
+
+
+import io.smallrye.mutiny.Multi;
+import io.smallrye.mutiny.Uni;
+import io.vertx.core.json.JsonObject;
+import io.vertx.mutiny.pgclient.PgPool;
+
+import javax.annotation.PostConstruct;
+import javax.inject.Inject;
+import javax.ws.rs.*;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import java.net.URI;
+import java.util.Hashtable;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Random;
+
+//RSA encryption decryption
+
+@Path("app")
+public class UsersResource extends RSAResource {
+
+    @Inject
+    PgPool client;
+
+    Hashtable<Integer, RSA> rsaUsersKeysHashTable = new  Hashtable<Integer, RSA>();
+    Hashtable<String, Integer> rsaUserRandomHashTable = new Hashtable<String, Integer>();
+
+    @PostConstruct
+    void config() {
+        initdb();
+    }
+
+    private void initdb() {
+
+        /*
+        client.query("DROP TABLE IF EXISTS Users").execute()
+                .flatMap(m-> client.query("CREATE TABLE Users (id SERIAL PRIMARY KEY, " +
+                        "gender TEXT NOT NULL, " +
+                        "weight serial NOT NULL, " +
+                        "height int NOT NULL, " +
+                        "age serial NOT NULL, " +
+                        "name TEXT unique, " +
+                        "password TEXT NOT NULL)").execute())
+                .flatMap(m -> client.query("INSERT INTO Users (gender, weight, height, age, name, password) VALUES ('male', 80, 190, 33, 'Jan2', '12345')").execute())
+                .flatMap(m -> client.query("INSERT INTO Users (gender, weight, height, age, name, password) VALUES ('male', 80, 180, 33, 'Jan', '12345')").execute())
+                .flatMap(m -> client.query("INSERT INTO Users (gender, weight, height, age, name, password) VALUES ('male', 75, 185, 40, 'Mark', '33333')").execute()).await()
+                .indefinitely();
+
+
+
+        client.query("DROP TABLE IF EXISTS Meals_schedule cascade").execute()
+                .flatMap(m-> client.query("CREATE TABLE Meals_schedule (id SERIAL PRIMARY KEY, " +
+                        "user_id SERIAL UNIQUE REFERENCES Users(id) NOT NULL, " +
+                        "first_meal_name TEXT NOT NULL, " +
+                        "first_meal_time int NOT NULL, " +
+                        "second_meal_name TEXT NOT NULL, " +
+                        "second_meal_time int NOT NULL, " +
+                        "third_meal_name TEXT NOT NULL, " +
+                        "third_meal_time int NOT NULL, " +
+                        "fourth_meal_name TEXT NOT NULL, " +
+                        "fourth_meal_time int NOT NULL, " +
+                        "fifth_meal_name TEXT NOT NULL, " +
+                        "fifth_meal_time int NOT NULL, " +
+                        "sixth_meal_name TEXT NOT NULL, " +
+                        "sixth_meal_time int NOT NULL)").execute())
+                .flatMap(m -> client.query("INSERT INTO Meals_schedule (user_id, first_meal_name, first_meal_time, second_meal_name, second_meal_time, third_meal_name, third_meal_time, fourth_meal_name, fourth_meal_time, fifth_meal_name, fifth_meal_time, sixth_meal_name, sixth_meal_time) VALUES (1, 'sniadanie', 360, 'drugie sniadanie', 540, 'lunch', 720, 'obiad', 900, 'podwieczorek', 1080, 'kolacja',  1260)").execute())
+                .flatMap(m -> client.query("INSERT INTO Meals_schedule (user_id, first_meal_name, first_meal_time, second_meal_name, second_meal_time, third_meal_name, third_meal_time, fourth_meal_name, fourth_meal_time, fifth_meal_name, fifth_meal_time, sixth_meal_name, sixth_meal_time) VALUES (2, 'sniadanie', 360, 'drugie sniadanie', 540, 'lunch', 720, 'obiad', 900, 'podwieczorek', 1080, 'kolacja',  1260)").execute())
+                .flatMap(m -> client.query("INSERT INTO Meals_schedule (user_id, first_meal_name, first_meal_time, second_meal_name, second_meal_time, third_meal_name, third_meal_time, fourth_meal_name, fourth_meal_time, fifth_meal_name, fifth_meal_time, sixth_meal_name, sixth_meal_time) VALUES (3, 'sniadanie', 360, 'drugie sniadanie', 540, 'lunch', 720, 'obiad', 900, 'podwieczorek', 1080, 'kolacja',  1260)").execute()).await()
+                .indefinitely();*/
+/*
+         client.query("CREATE TABLE Meals_schedule (id SERIAL PRIMARY KEY, " +
+                "user_id SERIAL UNIQUE REFERENCES Users(id) NOT NULL, " +
+                "first_meal_name TEXT NOT NULL, " +
+                "first_meal_time int NOT NULL, " +
+                "second_meal_name TEXT NOT NULL, " +
+                "second_meal_time int NOT NULL, " +
+                "third_meal_name TEXT NOT NULL, " +
+                "third_meal_time int NOT NULL, " +
+                "fourth_meal_name TEXT NOT NULL, " +
+                "fourth_meal_time int NOT NULL, " +
+                "fifth_meal_name TEXT NOT NULL, " +
+                "fifth_meal_time int NOT NULL, " +
+                "sixth_meal_name TEXT NOT NULL, " +
+                "sixth_meal_time int NOT NULL, " +
+                 "day date UNIQUE NOT NULL)").executeAndAwait();*/
+
+/*
+        client.query("INSERT INTO Users (gender, weight, height, age, name, password) VALUES ('male', 80, 190, 33, 'MMJan23', '12345')").execute().flatMap(m -> client.query("INSERT INTO Users (gender, weight, height, age, name, password) VALUES ('male', 80, 180, 33, 'JMJan33221', '12345')").execute())
+                .flatMap(m -> client.query("INSERT INTO Users (gender, weight, height, age, name, password) VALUES ('male', 75, 185, 40, 'MMMark3', '33333')").execute()).await()
+                .indefinitely();
+*/
+
+        /*
+         client.query("DROP TABLE IF EXISTS Users, Meals_schedule").execute()
+                .flatMap(m-> client.query("CREATE TABLE Users (id SERIAL PRIMARY KEY, " +
+                        "gender TEXT NOT NULL, " +
+                        "weight serial NOT NULL, " +
+                        "height int NOT NULL, " +
+                        "age serial NOT NULL, " +
+                        "name TEXT unique, " +
+                        "password TEXT NOT NULL)").execute()).flatMap(m-> client.query("CREATE TABLE Meals_schedule (id SERIAL PRIMARY KEY, " +
+                "user_id SERIAL UNIQUE REFERENCES Users(id) NOT NULL, " +
+                "first_meal_name TEXT NOT NULL, " +
+                "first_meal_time int NOT NULL, " +
+                "second_meal_name TEXT NOT NULL, " +
+                "second_meal_time int NOT NULL, " +
+                "third_meal_name TEXT NOT NULL, " +
+                "third_meal_time int NOT NULL, " +
+                "fourth_meal_name TEXT NOT NULL, " +
+                "fourth_meal_time int NOT NULL, " +
+                "fifth_meal_name TEXT NOT NULL, " +
+                "fifth_meal_time int NOT NULL, " +
+                "sixth_meal_name TEXT NOT NULL, " +
+                "sixth_meal_time int NOT NULL)").execute())
+                .flatMap(m -> client.query("INSERT INTO Users (gender, weight, height, age, name, password) VALUES ('male', 80, 190, 33, 'Jan2', '12345')").execute())
+                .flatMap(m -> client.query("INSERT INTO Users (gender, weight, height, age, name, password) VALUES ('male', 80, 180, 33, 'Jan', '12345')").execute())
+                .flatMap(m -> client.query("INSERT INTO Users (gender, weight, height, age, name, password) VALUES ('male', 75, 185, 40, 'Mark', '33333')").execute()).await()
+                .indefinitely();
+         */
+
+
+        /*
+        .flatMap(m -> client.query("INSERT INTO Meals_schedule (user_id, first_meal_name, first_meal_time, second_meal_name, second_meal_time, third_meal_name, third_meal_time, fourth_meal_name, fourth_meal_time, fifth_meal_name, fifth_meal_time, sixth_meal_name, sixth_meal_time) VALUES (1, 'sniadanie', 360, 'drugie sniadanie', 540, 'lunch', 720, 'obiad', 900, 'podwieczorek', 1080, 'kolacja',  1260)").execute())
+                .flatMap(m -> client.query("INSERT INTO Meals_schedule (user_id, first_meal_name, first_meal_time, second_meal_name, second_meal_time, third_meal_name, third_meal_time, fourth_meal_name, fourth_meal_time, fifth_meal_name, fifth_meal_time, sixth_meal_name, sixth_meal_time) VALUES (2, 'sniadanie', 360, 'drugie sniadanie', 540, 'lunch', 720, 'obiad', 900, 'podwieczorek', 1080, 'kolacja',  1260)").execute())
+                .flatMap(m -> client.query("INSERT INTO Meals_schedule (user_id, first_meal_name, first_meal_time, second_meal_name, second_meal_time, third_meal_name, third_meal_time, fourth_meal_name, fourth_meal_time, fifth_meal_name, fifth_meal_time, sixth_meal_name, sixth_meal_time) VALUES (3, 'sniadanie', 360, 'drugie sniadanie', 540, 'lunch', 720, 'obiad', 900, 'podwieczorek', 1080, 'kolacja',  1260)").execute()).await()
+                .indefinitely();
+         */
+
+    }
+
+//**********************************************
+//*************  RSA   *************************
+    //generate and send RSA Key to client
+    @GET
+    @Path("getKey/name={name}")
+    public Uni<RSAKey> generateKey(@PathParam("name") String name){
+
+
+        RSA rsa;
+        Random rand = new Random();
+        int randomNum = rand.nextInt((999999 - 0) + 1) + 0;
+
+        if(rsaUsersKeysHashTable.containsKey(randomNum))
+        {
+            rsa = rsaUsersKeysHashTable.get(randomNum);
+            rsaUserRandomHashTable.put(name, randomNum);
+        }else
+        {
+            //generate RSA disposable key
+            rsa = new RSA();
+
+            //put the key to hash table
+            rsaUsersKeysHashTable.put(randomNum, rsa);
+            rsaUserRandomHashTable.put(name, randomNum);
+
+        }
+
+        //generate Uni with keys for a customer
+        String N = rsa.getN().toString();
+        String e = rsa.getE().toString();
+        Uni<RSAKey> uni = Uni.createFrom().item(new RSAKey(N, e, randomNum));
+
+        return uni;
+    }
+
+    //decrytpt encrypted password for given user
+    private String decryptPassword(Integer random, String name, String password)
+    {
+
+        RSA rsa = rsaUsersKeysHashTable.get(random);
+
+
+        System.out.println(name);
+        rsaUserRandomHashTable.remove(name);
+
+        if(!rsaUserRandomHashTable.contains(random)){
+            rsaUsersKeysHashTable.remove(random);
+        }
+
+
+        byte[] incomingEncryptedPasswordBytes = rsa.stringToBytes(password);
+
+        byte[] incomingDecryptedPasswordBytes = rsa.decryptMessage(incomingEncryptedPasswordBytes);
+        String incomingDecryptedPasswordString = new String(incomingDecryptedPasswordBytes);
+
+        //Users.save(client, "female", 60, 166, 40, "Janina", "1423").await().indefinitely();
+        //.await().indefinitely() znaczy czekaj az sie doda
+
+        System.out.println(incomingDecryptedPasswordString);
+
+        return incomingDecryptedPasswordString;
+    }
+//*************  RSA   *************************
+//**********************************************
+
+
+
+//**********************************************
+//********  Users endpoints  *******************
+    //add user
+    @POST
+    @Path("users/gender={gender}&weight={weight}&height={height}&age={age}&name={name}&password={password}")
+    public Uni<Long> add(@PathParam("gender") String gender,  @PathParam("weight") int weight, @PathParam("height") int height, @PathParam("age") int age,  @PathParam("name") String name, @PathParam("password") String password) {
+
+        return Users.save(client, gender, weight, height, age, name, password);
+    }
+
+    //add user2
+    @POST
+    @Path("users2")
+    public Uni<Long> add2(JsonObject body) {
+
+        return Users.save(client, body.getString("gender"), body.getInteger("weight"), body.getInteger("height"), body.getInteger("age"), body.getString("name"), body.getString("password"));
+    }
+
+    //get user by password and name
+    @GET
+    @Path("users/random={random}&name={name}&password={password}")
+    public Multi<Users> getUNP(@PathParam("random") Integer random, @PathParam("name") String name, @PathParam("password") String password) {
+
+       // String incomingDecryptedPasswordS = this.decryptPassword(random, name, password);
+
+        return Users.findByNameAndPassword(client, name, password);
+
+    }
+
+    //delate user by password and name
+    @DELETE
+    @Path("users/random={random}&usersname={name}&password={password}")
+    public Uni<Boolean> delate(@PathParam("random") Integer random, @PathParam("name") String name, @PathParam("password") String password) {
+
+        String incomingDecryptedPasswordS = this.decryptPassword(random, name, password);
+
+        return Users.delete(client, name, incomingDecryptedPasswordS);
+    }
+
+    //check if name already exist
+    @GET
+    @Path("username/name={name}")
+    public Uni<Boolean> checkName(@PathParam("name") String name) {
+        return Users.chechIfNameExist(client, name);
+    }
+
+//********  Users endpoints  *******************
+//**********************************************
+
+
+
+//**********************************************
+//********  Meals_schedule endpoints  **********
+
+
+    //change in users's meals_schedule
+    //if we don't want some meal (e.g. we eat only 4 meals a day, just put empty:"" as a meal name which you don't want
+    @POST
+    @Path("meals_schedule/first_meal_name={first_meal_name}&first_meal_time={first_meal_time}&second_meal_name={second_meal_name}&second_meal_time={second_meal_time}&third_meal_name={third_meal_name}&third_meal_time={third_meal_time}&fourth_meal_name={fourth_meal_name}&fourth_meal_time={fourth_meal_time}&fifth_meal_name={fifth_meal_name}&fifth_meal_time={fifth_meal_time}&sixth_meal_name={sixth_meal_name}&sixth_meal_time={sixth_meal_time}&day={day}&random={random}&name={name}&password={password}")
+    public  Uni<Boolean> mealsUpdate(@PathParam("first_meal_name") String first_meal_name, @PathParam("first_meal_time") int first_meal_time, @PathParam("second_meal_name") String second_meal_name, @PathParam("second_meal_time") int second_meal_time, @PathParam("third_meal_name") String third_meal_name, @PathParam("third_meal_time") int third_meal_time, @PathParam("fourth_meal_name") String fourth_meal_name, @PathParam("fourth_meal_time") int fourth_meal_time, @PathParam("fifth_meal_name") String fifth_meal_name, @PathParam("fifth_meal_time") int fifth_meal_time, @PathParam("sixth_meal_name") String sixth_meal_name, @PathParam("sixth_meal_time") int sixth_meal_time, @PathParam("day") String day, @PathParam("random") Integer random, @PathParam("name") String name, @PathParam("password") String password)
+    {
+
+        String incomingDecryptedPasswordS = this.decryptPassword(random, name, password);
+        return Meals_schedule.save(client, first_meal_name, first_meal_time, second_meal_name, second_meal_time, third_meal_name, third_meal_time, fourth_meal_name, fourth_meal_time, fifth_meal_name, fifth_meal_time, sixth_meal_name, sixth_meal_time, day, name, incomingDecryptedPasswordS);
+    }
+
+    @POST
+    @Path("meals_schedule/new/first_meal_name={first_meal_name}&first_meal_time={first_meal_time}&second_meal_name={second_meal_name}&second_meal_time={second_meal_time}&third_meal_name={third_meal_name}&third_meal_time={third_meal_time}&fourth_meal_name={fourth_meal_name}&fourth_meal_time={fourth_meal_time}&fifth_meal_name={fifth_meal_name}&fifth_meal_time={fifth_meal_time}&sixth_meal_name={sixth_meal_name}&sixth_meal_time={sixth_meal_time}&day={day}&random={random}&name={name}&password={password}")
+    public  Uni<Long> mealSaveNew(@PathParam("first_meal_name") String first_meal_name, @PathParam("first_meal_time") int first_meal_time, @PathParam("second_meal_name") String second_meal_name, @PathParam("second_meal_time") int second_meal_time, @PathParam("third_meal_name") String third_meal_name, @PathParam("third_meal_time") int third_meal_time, @PathParam("fourth_meal_name") String fourth_meal_name, @PathParam("fourth_meal_time") int fourth_meal_time, @PathParam("fifth_meal_name") String fifth_meal_name, @PathParam("fifth_meal_time") int fifth_meal_time, @PathParam("sixth_meal_name") String sixth_meal_name, @PathParam("sixth_meal_time") int sixth_meal_time, @PathParam("day") String day, @PathParam("random") Integer random, @PathParam("name") String name, @PathParam("password") String password)
+    {
+
+        String incomingDecryptedPasswordS = this.decryptPassword(random, name, password);
+        return Meals_schedule.saveNew(client, first_meal_name, first_meal_time, second_meal_name, second_meal_time, third_meal_name, third_meal_time, fourth_meal_name, fourth_meal_time, fifth_meal_name, fifth_meal_time, sixth_meal_name, sixth_meal_time, day, name, incomingDecryptedPasswordS);
+    }
+
+    //change in users's meals_schedule
+    @GET
+    @Path("meals_schedule/delete/random={random}&name={name}&password={password}")
+    public Uni<Boolean> deleteMeal(@PathParam("random") Integer random, @PathParam("name") String name, @PathParam("password") String password) {
+
+        String incomingDecryptedPasswordS = this.decryptPassword(random, name, password);
+
+        return Meals_schedule.delete(client, name, incomingDecryptedPasswordS);
+
+    }
+
+    //get users's meals_schedule
+    @GET
+    @Path("meals_schedule/random={random}&name={name}&password={password}")
+    public Multi<Meals_schedule> getMNP(@PathParam("random") Integer random, @PathParam("name") String name, @PathParam("password") String password) {
+
+        String incomingDecryptedPasswordS = this.decryptPassword(random, name, password);
+
+        return Meals_schedule.findByNameAndPassword(client, name, incomingDecryptedPasswordS);
+
+    }
+
+    //get Last users's meals_schedule
+    @GET
+    @Path("meals_schedule/last_schedule/random={random}&name={name}&password={password}")
+    public Multi<Meals_schedule> getLastMNP(@PathParam("random") Integer random, @PathParam("name") String name, @PathParam("password") String password) {
+
+        String incomingDecryptedPasswordS = this.decryptPassword(random, name, password);
+
+        return Meals_schedule.getLastScheduleNameAndPassword(client, name, incomingDecryptedPasswordS);
+
+    }
+
+    //check if meal schedule at given day already exist
+    @GET
+    @Path("meals_schedule/check/day={day}&random={random}&name={name}&password={password}")
+    public Uni<Boolean> checkMealsSchedule(@PathParam("day") String day, @PathParam("random") Integer random, @PathParam("name") String name, @PathParam("password") String password) {
+
+        String incomingDecryptedPasswordS = this.decryptPassword(random, name, password);
+
+        return Meals_schedule.checkIfDayScheduleExist(client, day, name, incomingDecryptedPasswordS);
+    }
+
+    //check if meal schedule at given day already exist
+    @GET
+    @Path("meals_schedule/from/day={day}&random={random}&name={name}&password={password}")
+    public Multi<Meals_schedule> findMealsScheduleFromGivenDay(@PathParam("day") String day, @PathParam("random") Integer random, @PathParam("name") String name, @PathParam("password") String password) {
+
+        String incomingDecryptedPasswordS = this.decryptPassword(random, name, password);
+
+        return Meals_schedule.findByDayNameAndPassword(client, day, name, incomingDecryptedPasswordS);
+    }
+
+//********  Meals_schedule endpoints  **********
+//**********************************************
+
+
+//*************************************************
+//********  Products endpoints  *******************
+
+    //save product
+    @POST
+    @Path("products/productName={productName}&brand={brand}&one_portion={one_portion}&fat={fat}&carbohydrates={carbohydrates}&protein={protein}&random={random}&name={name}&password={password}")
+    public Uni<Long> addProduct(@PathParam("productName") String productName, @PathParam("brand") String brand, @PathParam("one_portion") int one_portion, @PathParam("fat") int fat, @PathParam("carbohydrates") int carbohydrates, @PathParam("protein") int protein, @PathParam("random") Integer random, @PathParam("name") String u_name, @PathParam("password") String password)
+    {
+        String incomingDecryptedPasswordS = this.decryptPassword(random, u_name, password);
+        return Products.save(client, productName, brand, one_portion, fat, carbohydrates, protein, u_name, incomingDecryptedPasswordS);
+    }
+
+    //save product
+    @POST
+    @Path("products2")
+    public Uni<Long> addProduct2(JsonObject product)
+    {
+        return Products.save(client, product.getString("product_name"), product.getString("brand"), product.getInteger("one_portion"), product.getInteger("fat"), product.getInteger("carbohydrates"), product.getInteger("protein"), product.getString("user_name"), product.getString("password"));
+    }
+
+    //get all products from database
+    @GET
+    @Path("products")
+    public Multi<Products> getProduct()
+    {
+        return Products.findAll(client);
+    }
+
+    //get al products that was added by given User
+    @GET
+    @Path("products/random={random}&name={name}&password={password}")
+    public Multi<Products> getUserProduct(@PathParam("random") Integer random, @PathParam("name") String name, @PathParam("password") String password)
+    {
+        String incomingDecryptedPasswordS = this.decryptPassword(random, name, password);
+        return Products.findAllUserProducts(client, name, incomingDecryptedPasswordS);
+    }
+
+    @DELETE
+    @Path("products/pr_name={pr_name}&brand={brand}&random={random}&name={name}&password={password}")
+    public Uni<Boolean> deleteProduct(@PathParam("pr_name") String pr_name, @PathParam("brand") String brand,  @PathParam("random") Integer random, @PathParam("name") String name, @PathParam("password") String password)
+    {
+        String incomingDecryptedPasswordS = this.decryptPassword(random, name, password);
+        return Products.delete(client, pr_name, brand, name, incomingDecryptedPasswordS);
+    }
+
+//********  Products endpoints  *******************
+//*************************************************
+
+
+
+//*************************************************
+//********  Eaten_products endpoints  *************
+/*@POST
+@Path("eaten_products/product_id={product_id}&day={day}&meal_number={meal_number}&random={random}&name={name}&password={password}")
+public Uni<Long> saveEatenProduct(@PathParam("product_id") Long product_id, @PathParam("day") String day, @PathParam("meal_number") Integer meal_number, @PathParam("random") Integer random, @PathParam("name") String name, @PathParam("password") String password)
+{
+    String incomingDecryptedPasswordS = this.decryptPassword(random, name, password);
+    System.out.println(incomingDecryptedPasswordS);
+    return Eaten_products.save(client, product_id,  meal_number, day, name, incomingDecryptedPasswordS);
+}*/
+@POST
+@Path("eaten_products/product_id={product_id}&day={day}&name={name}&password={password}")
+public Uni<Long> saveEatenProduct(@PathParam("product_id") Long product_id, @PathParam("day") String day, @PathParam("name") String name, @PathParam("password") String password)
+{
+    //String incomingDecryptedPasswordS = this.decryptPassword(random, name, password);
+
+    return Eaten_products.save(client, product_id, day, name, password);
+}
+
+@GET
+@Path("eaten_products/day={day}&name={name}&password={password}")
+public Multi<Eaten_products> getEatenProduct(@PathParam("day") String day, @PathParam("name") String name, @PathParam("password") String password)
+{
+    //String incomingDecryptedPasswordS = this.decryptPassword(random, name, password);
+    return Eaten_products.findByNamePasswordAndDay(client, name, password, day);
+}
+
+@GET
+@Path("eaten_products/name={name}&password={password}")
+public Multi<Eaten_products> getEatenProducts( @PathParam("name") String name, @PathParam("password") String password)
+{
+    //String incomingDecryptedPasswordS = this.decryptPassword(random, name, password);
+    return Eaten_products.findByNameAndPassword(client, name, password);
+}
+
+@DELETE
+@Path("eaten_products/id={id}&random={random}&name={name}&password={password}")
+public Uni<Boolean> eatenProductsDelete(@PathParam("id") Long id, @PathParam("name") String name, @PathParam("password") String password)
+{
+    //String incomingDecryptedPasswordS = this.decryptPassword(random, name, password);
+    return Eaten_products.delete(client, name, password, id);
+}
+
+//********  Eaten_products endpoints **************
+//*************************************************
+
+//********************
+//get all users, meals, function only to for testing, it needs to be removed
+    @GET
+    @Path("users")
+    public Multi<Users> getUsers() {
+
+        //Users.save(client, "female", 60, 166, 40, "Janina", "1423").await().indefinitely();
+        //.await().indefinitely() znaczy czekaj az sie doda
+        return Users.findAll(client);
+
+    }
+
+    //get all Meals_schedule, function only to for testing, it needs to be removed
+    @GET
+    @Path("meals")
+    public Multi<Meals_schedule> getMeals() {
+
+        return Meals_schedule.findAll(client);
+
+    }
+//*****************************
+
+
+//*************************************************
+//********  Triggers in SQL database **************
+
+    /*
+    Po insercie do tabeli Users:
+
+    BEGIN
+	INSERT INTO Meals_schedule(user_id, first_meal_name, first_meal_time, second_meal_name, second_meal_time, third_meal_name, third_meal_time, fourth_meal_name, fourth_meal_time, fifth_meal_name, fifth_meal_time, sixth_meal_name, sixth_meal_time, day)
+	VALUES(New.id, 'sniadanie', 360, 'drugie sniadanie', 540, 'lunch', 720, 'obiad', 900, 'podwieczorek', 1080, 'kolacja',  1260, Now());
+	RETURN NEW;
+    END;
+     */
+
+//********  Triggers in SQL database **************
+//*************************************************
+
+}

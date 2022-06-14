@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox prefHeight="400.0" prefWidth="640.0" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.logginWindowController">
+  <children>
+     <AnchorPane maxHeight="-1.0" maxWidth="-1.0" prefHeight="-1.0" prefWidth="-1.0" VBox.vgrow="ALWAYS">
+         <children>
+            <TextField fx:id="logginField" layoutX="164.0" layoutY="73.0" prefHeight="25.0" prefWidth="344.0" />
+            <TextField fx:id="passwordField" layoutX="164.0" layoutY="121.0" prefHeight="25.0" prefWidth="344.0" />
+            <Label layoutX="111.0" layoutY="77.0" text="login" />
+            <Label layoutX="111.0" layoutY="125.0" text="hasło" />
+            <MenuButton fx:id="menuButton" layoutX="271.0" layoutY="166.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="96.0" text="worker">
+               <items>
+                  <MenuItem mnemonicParsing="false" onAction="#setAdmin" text="admin" />
+                  <MenuItem mnemonicParsing="false" onAction="#setWorker" text="worker" />
+                  <MenuItem mnemonicParsing="false" onAction="#setCustomer" text="customer" />
+               </items>
+            </MenuButton>
+            <Button layoutX="273.0" layoutY="213.0" mnemonicParsing="false" onAction="#loggin" prefHeight="25.0" prefWidth="96.0" text="loggin" />
+         </children>
+      </AnchorPane>
+  </children>
+</VBox>

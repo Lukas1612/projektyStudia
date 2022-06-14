@@ -1,0 +1,304 @@
+#include <iostream>
+#include <stack>
+#include <queue>
+using namespace std;
+
+class Graf
+{
+private:
+    int n, m;
+    bool A[100][100];
+    bool odwiedzone[100];
+    int kolor_wierzcholka[100];
+    bool spojny;
+    bool dwodzielny;
+    queue < int > kolejnosc_odwiedzania_wierzcholkow;
+
+
+public:
+    Graf();
+    void wczytaj();
+    void DFS(int poczatek);
+    void BFS();
+    void ZerujTablice();
+    bool CzySpojny();
+    int LiczbaSpojnychPodgrafow(); //zly wynik
+    bool CzyDwudzielny();
+    bool CzyDrzewo();
+};
+
+
+bool Graf::CzyDrzewo()
+{
+    DFS(0);
+    if(spojny==1 && (n-m==1))
+    {
+        return true;
+    }else
+    {
+        return false;
+    }
+
+}
+
+Graf::Graf()
+{
+    for(int i=0; i<100; ++i)
+    {
+        for(int j=0; j<100; ++j)
+        {
+            A[i][j]=0;
+        }
+    }
+
+    ZerujTablice();
+}
+
+void Graf::ZerujTablice()
+{
+    for(int i=0; i<100; ++i)
+    {
+        odwiedzone[i]=false;
+        kolor_wierzcholka[i]=0;
+    }
+
+}
+
+void Graf::wczytaj()
+{
+    cin>> n>>m;
+
+    for(int i=0; i<m; ++i)
+    {
+        int a, b;
+        cin>>a>>b;
+
+        A[a][b]=1;
+        A[b][a]=1;
+
+    }
+}
+
+void Graf::DFS(int poczatek)
+{
+
+    int tmp, i;
+    int wierzch;
+    stack<int> S;
+    S.push(poczatek);
+    i=0;
+
+
+
+    ZerujTablice();
+
+    while(!S.empty())
+    {
+
+        wierzch=S.top();
+        kolejnosc_odwiedzania_wierzcholkow.push(wierzch);
+
+
+        S.pop();
+
+        if(odwiedzone[wierzch]==false)
+        {
+            odwiedzone[wierzch]=true;
+
+            //cout<<wierzch<<" ";
+
+            for( i=0; i<n; ++i)
+            {
+                if( A[wierzch][i]==true && odwiedzone[i]==false)
+                {
+                    S.push(i);
+                }
+            }
+        }
+    }
+
+    spojny=true;
+    for(i=0; i<n; ++i)
+    {
+        if(odwiedzone[i]==false)
+        {
+            //cout<<i<<endl;
+            spojny=false;
+            break;
+        }
+    }
+}
+
+void Graf::BFS()
+{
+
+    int tmp, i;
+    queue <int> Q;
+    Q.push(0);
+    i=0;
+
+    ZerujTablice();
+
+    while(!Q.empty())
+    {
+
+        int wierzch=Q.front();
+        Q.pop();
+
+        if(odwiedzone[wierzch]==false)
+        {
+            odwiedzone[wierzch]=true;
+
+            cout<<wierzch<<" ";
+
+            for( i=0; i<n; ++i)
+            {
+                if( A[wierzch][i]==true && odwiedzone[i]==false)
+                {
+                    Q.push(i);
+                }
+            }
+        }
+    }
+
+    spojny=true;
+    for(i=0; i<n; ++i)
+    {
+        if(odwiedzone[i]==false)
+        {
+            spojny=false;
+            break;
+        }
+    }
+
+}
+
+bool Graf::CzySpojny()
+{
+    this->DFS(0);
+    if(spojny)
+    {
+        cout<<" spojny "<<endl;
+        return true;
+    }
+    else
+    {
+        cout<<" niespojny "<<endl;
+        return false;
+    }
+}
+
+
+
+int Graf::LiczbaSpojnychPodgrafow()
+{
+    int tmp, i, liczba_podgrafow_spojnych;
+    stack<int> S;
+    S.push(0);
+    i=0;
+    spojny=false;
+
+    ZerujTablice();
+    liczba_podgrafow_spojnych=1;
+
+    while( spojny==false)
+    {
+        while(!S.empty())
+        {
+
+            int wierzch=S.top();
+            S.pop();
+
+            if(odwiedzone[wierzch]==false)
+            {
+                odwiedzone[wierzch]=true;
+
+                //cout<<wierzch<<" ";
+
+                for( i=0; i<n; ++i)
+                {
+                    if( A[wierzch][i]==true && odwiedzone[i]==false)
+                    {
+                        S.push(i);
+                    }
+                }
+            }
+        }
+
+        spojny=true;
+        for(i=0; i<n; ++i)
+        {
+            if(odwiedzone[i]==false)
+            {
+                //cout<<i<<endl;
+                spojny=false;
+                S.push(i);
+                ++liczba_podgrafow_spojnych;
+                break;
+            }
+        }
+
+    }
+
+    return liczba_podgrafow_spojnych;
+}
+
+bool Graf::CzyDwudzielny()
+{
+     int tmp, i;
+    int wierzch;
+    stack<int> S;
+    S.push(0);
+    i=0;
+
+    bool czyDwudzielny=true;
+
+     int kolory[100];
+    for(int i = 0; i < n; i++)
+        kolory[i] = 0;
+
+        kolory[0] = 1;
+
+
+    ZerujTablice();
+
+    while(!S.empty())
+    {
+
+        wierzch=S.top();
+
+        S.pop();
+
+        if(odwiedzone[wierzch]==false)
+        {
+            odwiedzone[wierzch]=true;
+
+            //cout<<wierzch<<" ";
+
+            for( i=0; i<n; ++i)
+            {
+                if( A[wierzch][i]==true)
+                {
+                    if(kolory[i] == 0) kolory[i] = -kolory[wierzch];
+                    if(kolory[i] == kolory[wierzch]) czyDwudzielny = false;
+                    if(odwiedzone[i] == false) S.push(i);
+                }
+            }
+        }
+    }
+
+        if(czyDwudzielny == true)
+        cout << "TAK" << endl;
+    else
+        cout << "NIE" << endl;
+}
+
+int main()
+{
+    Graf G;
+    G.wczytaj();
+G.CzyDwudzielny();
+
+
+    return 0;
+}

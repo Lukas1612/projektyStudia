@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox prefHeight="400.0" prefWidth="640.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.customerFirstWindowController">
+  <children>
+    <MenuBar VBox.vgrow="NEVER">
+      <menus>
+        <Menu mnemonicParsing="false" text="settings">
+          <items>
+            <MenuItem mnemonicParsing="false" text="change password" onAction="#changePassword" />
+          </items>
+        </Menu>
+      </menus>
+    </MenuBar>
+    <AnchorPane maxHeight="-1.0" maxWidth="-1.0" prefHeight="-1.0" prefWidth="-1.0" VBox.vgrow="ALWAYS">
+         <children>
+            <TabPane layoutX="26.0" layoutY="47.0" prefHeight="200.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE" />
+            <Button layoutX="261.0" layoutY="108.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="68.0" text="search" onAction="#search" />
+            <Button layoutX="260.0" layoutY="163.0" mnemonicParsing="false" text="my books" onAction="#myBooks"/>
+             <Button layoutX="550.0" layoutY="330.0" mnemonicParsing="false" text="back" onAction="#back"/>
+         </children>
+    </AnchorPane>
+  </children>
+</VBox>

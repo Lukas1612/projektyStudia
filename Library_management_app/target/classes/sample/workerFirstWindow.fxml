@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox prefHeight="400.0" prefWidth="640.0" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.workerFirstWindowController">
+  <children>
+    <MenuBar VBox.vgrow="NEVER">
+      <menus>
+        <Menu mnemonicParsing="false" text="settings">
+          <items>
+            <MenuItem mnemonicParsing="false" text="change password" onAction="#changePassword" />
+          </items>
+        </Menu>
+      </menus>
+    </MenuBar>
+    <AnchorPane maxHeight="-1.0" maxWidth="-1.0" prefHeight="-1.0" prefWidth="-1.0" VBox.vgrow="ALWAYS">
+         <children>
+            <Button layoutX="261.0" layoutY="56.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="118.0" text="add new book" onAction="#add" />
+            <Button layoutX="261.0" layoutY="118.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="118.0" text="delete book" onAction="#delete" />
+            <Button layoutX="261.0" layoutY="173.0" mnemonicParsing="false" text="add  new customer" onAction="#addCustomer" />
+            <Button layoutX="261.0" layoutY="262.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="118.0" text="borrow book" onAction="#borrowBook" />
+             <Button layoutX="500.0" layoutY="340.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="118.0" text="back" onAction="#back" />
+         </children>
+    </AnchorPane>
+  </children>
+</VBox>

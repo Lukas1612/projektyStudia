@@ -1,0 +1,93 @@
+        ouble avarge=0;
+        double corelative=0;
+        double nonCorelative=0;
+        int quantityOfLoops;
+
+       //createNewDatabase ();
+       //createNewTable();
+   /*
+        insertCat ( 1,"Children Bicycles" );
+        insertCat ( 2,"Comfort Bicycles");
+        insertCat ( 3,"Cruisers Bicycles" );
+        insertCat(4,"Cyclocross Bicycles");
+        */
+
+        //insert();
+        Long starttime = System.currentTimeMillis();
+        selectCustomersThatBoughtBrands();
+        Long endtime = System.currentTimeMillis();
+        Long result = endtime - starttime;
+        Long resultQueries;
+        Long resultSubqueries;
+        System.out.println ("***************");
+        System.out.println ("***************");
+        System.out.println ("***************");
+        System.out.println ("***************");
+        System.out.println ("time: " + result);
+        System.out.println ("***************");
+        System.out.println ();
+        System.out.println ();
+
+        quantityOfLoops=450;
+        for(int j=0; j<quantityOfLoops; ++j) {
+          //  System.out.println ();
+           // System.out.println ("***************");
+            starttime = System.currentTimeMillis ( );
+
+            for (int i = 0; i < 100; ++i) {
+                selectCustomersThatBoughtBrands();
+                 //OrdersTest2();
+                //OrdersTest();
+
+                //OrdersTestSubquery2();
+            }
+
+            endtime = System.currentTimeMillis ( );
+            resultQueries = endtime - starttime;
+            nonCorelative =  nonCorelative + resultQueries;
+           // System.out.println ( "time: " + resultQueries );
+
+            //OrdersTest ();
+
+            //System.out.println ( "  Subqueries   " );
+            starttime = System.currentTimeMillis ( );
+
+            //OrdersTestSubquery ();
+
+            for (int i = 0; i < 100; ++i) {
+                //selectCustomersThatBoughtBrands_Subqueries();
+                //OrdersTestSubquery();
+                selectCustomersThatBoughtBrands2();
+            }
+
+            //selectAll ();
+
+            endtime = System.currentTimeMillis ( );
+            resultSubqueries = endtime - starttime;
+            corelative = corelative + resultSubqueries;
+            result = resultQueries - resultSubqueries;
+            avarge = avarge+result;
+          //  System.out.println ( " Subqueries  time: " + resultSubqueries );
+           // System.out.println ( " difference: " + result );
+           // System.out.println ("***************");
+
+            System.out.println (j);
+
+        }
+
+        corelative = corelative/quantityOfLoops;
+        nonCorelative = nonCorelative/quantityOfLoops;
+        avarge = avarge/quantityOfLoops;
+
+        System.out.println ( " avarge: " + avarge);
+        System.out.println ( "corelative: " + corelative);
+        System.out.println ( "nonCorelative: " + nonCorelative);
+        if(corelative > nonCorelative)
+        {
+            System.out.println ( "percentage: " + (avarge/nonCorelative)*100 + "%");
+        }else
+        {
+            System.out.println ( "percentage: " + (avarge/corelative)*100 + "%");
+        }
+
+        System.out.println ("***************");

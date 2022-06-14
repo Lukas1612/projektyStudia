@@ -1,0 +1,239 @@
+select distinct kraj
+from zespoly 
+where id in 
+		(select gosc 
+		form mecze 
+		where gospodarz IN (select id 
+							from zespoly 
+							where Kraj = 'Poland'));
+							
+							
+select distinct (select kraj 
+				from zespoly 
+				when id = m.gosc) as kraj 
+form mecze m
+where 'poland'= (select kraj  
+				from zespoly 
+				where id = m.gospodarz );	
+********************
+
+select ( select customer_id
+         from customers
+		  where customer_id = orders.customer_id
+		) as customer
+from orders
+where orders.order_id IN (select ( select order_id 
+				          from order_items
+				          where product_id = products.product_id)
+						  from products
+						  where 'Heller' = ( select brand_name
+						                    from brands
+											where brands.brand_id = products.brand_id)
+						  );
+						 				
+
+								
+*********************************************************************************************************				
+select distinct customer_id, first_name, last_name
+from customers
+where customer_id IN
+           (select customer_id
+		    from orders
+			where order_id IN (select order_id
+			                    from order_items
+								where product_id IN (select product_id
+								                      from products
+													  where brand_id IN(select brand_id
+													                     from brands
+																		 where brand_name = 'Heller'))));
+*********************************************************************************************************
+
+///long_corelative
+select distinct (select customer_id
+         from customers
+		  where customer_id = orders.customer_id
+		) as customer_id
+from orders	
+where orders.order_id IN (select order_id 
+				          from order_items
+						  where product_id IN (select ( select product_id
+						                                from products 
+											            where products.product_id = stocks.product_id)
+											  from stocks
+											  where store_id=2));
+/// non_corelative_4in																												   
+select customer_id
+from customers
+where customer_id IN
+           (select customer_id
+		    from orders
+			where order_id IN (select order_id
+			                    from order_items
+								where product_id IN (select product_id
+								                      from products
+													  where product_id IN ( select product_id
+													                     from stocks
+																		 where store_id=2))))
+/// join_4join,
+select cus.customer_id
+from customers cus
+join orders ors on cus.customer_id=ors.customer_id
+join order_items oi on oi.order_id = ors.order_id
+join products prs on prs.product_id = oi.product_id
+join stocks ss on ss.product_id = prs.product_id
+where ss.store_id = 2;
+
+
+
+
+/// join_3join
+select cus.customer_id
+from customers cus
+join orders ors on cus.customer_id=ors.customer_id
+join order_items oi on oi.order_id = ors.order_id
+join products prs on prs.product_id = oi.product_id
+where prs.category_id = 2;
+
+
+/// join_2join																		 
+select cus.customer_id
+from customers cus
+join orders ors on cus.customer_id=ors.customer_id
+join order_items oi on oi.order_id = ors.order_id
+where oi.product_id = 2;
+
+/// join_1join	
+select cus.customer_id
+from customers cus
+join orders ors on cus.customer_id=ors.customer_id
+where ors.order_id = 2;
+
+
+///non_corelative_3in,																	 
+select customer_id																		 
+from customers
+where customer_id IN
+           (select customer_id
+		    from orders
+			where order_id IN (select order_id
+			                    from order_items
+								where product_id IN (select product_id
+								                      from products
+													  where category_id = 2)))											  
+													 									  																						  
+///non_corelative_2in,													  
+select customer_id																		 
+from customers
+where customer_id IN
+           (select customer_id
+		    from orders
+			where order_id IN (select order_id
+			                    from order_items
+								where product_id = 2))
+
+///non_corelative_1in,													
+select customer_id																		 
+from customers
+where customer_id IN
+           (select customer_id
+		    from orders
+			where order_id = 2)
+			
+
+///corelative_like_non_corelative_1in		
+select distinct (select customer_id
+         from customers
+		  where customer_id = orders.customer_id
+		) as customer_id
+from orders	
+where orders.order_id = 2;
+													  
+													  
+																		
+*********************************************************************************************************
+
+
+//roznica w dodaniu podzapytania skorelowanego
+
+
+///corelative_3in
+select (select product_id
+        from order_items
+		where product_id IN (select product_id 
+		                     from products
+                             where product_id IN (select  product_id
+							                      from stocks
+												  where store_id = orders.store_id)))
+from orders
+where order_id = 2;
+
+
+
+select (select product_name
+        from products
+		where product_id IN (select product_id 
+		                     from stocks
+                             where store_id IN (select store_id
+							                    from stores
+												where store_id = 2)))
+from orders
+where order_id = 2;
+
+													   
+///non_corelative_3in_from_corelative_3in
+select product_id
+from order_items
+where product_id IN (select product_id 
+		             from products
+                     where product_id IN (select product_id
+							              from stocks
+										   where store_id = 2))
+										   
+										   
+/// corelative_short										 
+select (select store_id
+        from orders o
+		where o.order_id=oi.order_id)
+from order_items oi
+where item_id = 2;	
+
+
+///non_corelative_short_from_corelative_short
+select store_id
+from orders o
+where o.order_id=2;
+				   
+######################################
+
+																		
+*********************************************************************************************************
+
+
+
+   private enum SubqueriesNames
+    {
+        non_corelative_4in,
+        non_corelative_3in,
+        non_corelative_2in,
+		non_corelative_1in,
+        join_4join,
+        join_3join,
+        join_2join,
+		join_1join,
+        long_corelative,
+		corelative_like_non_corelative_1in,
+        corelative_3in,
+        non_corelative_3in_from_corelative_3in,
+        corelative_short,
+        non_corelative_short_from_corelative_short
+    }
+
+długie/krótkie:
+-skorelowane
+-nieskorelowane
+-join
+
+				
+				
+				
+				
