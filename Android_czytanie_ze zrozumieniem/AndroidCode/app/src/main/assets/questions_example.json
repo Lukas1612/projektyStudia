@@ -1,0 +1,46 @@
+{
+  "data": {
+    "questions": [
+      {
+        "id": 1,
+        "question_type_id": 1,
+        "question_type_name": "CheckBox",
+        "question_name": "Type of Operating System ?",
+        "question_item": [
+          {
+            "answer_id": "1",
+            "name": "There is a word used in a way that you weren't familiar with, so you understand the sentence in the wrong way.",
+            "correct_or_false": "correct"
+          },
+          {
+            "answer_id": "2",
+            "name": "You wrongly assume which words are verbs, nouns, adjectives, etc. and because of that the sentence seems to make no sense. Sometimes it's because you wrongly guess what the sentence will mean, and biased by this you read it in the wrong way.",
+            "correct_or_false": "correct"
+          },
+          {
+            "answer_id": "3",
+            "name": "There is an idiom or phrase that you don't know, or a metaphor that you don't understand.",
+            "correct_or_false": "false"
+          },
+          {
+            "answer_id": "4",
+            "name": "There is a word that you don't know, that doesn't have a direct translation to your language.",
+            "correct_or_false": "false"
+          },
+          {
+            "answer_id": "5",
+            "name": "You wrongly assume what is the subject of a sentence (e.g. \"the dog went outside and it started to bark\" vs \"the dog went outside and it started to rain\").",
+            "correct_or_false": "false"
+          },
+          {
+            "answer_id": "6",
+            "name": "You understand a sentence but you didn't understand its overtone",
+            "correct_or_false": "false"
+          }
+        ]
+      }
+    ]
+  },
+  "status": true,
+  "message": "The data was fetched successfully"
+}

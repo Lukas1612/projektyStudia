@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox prefHeight="400.0" prefWidth="640.0" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.adminWindowController">
+  <children>
+    <MenuBar VBox.vgrow="NEVER">
+      <menus>
+        <Menu mnemonicParsing="false" text="settings">
+          <items>
+            <MenuItem mnemonicParsing="false" text="change password"  onAction="#changePassword" />
+          </items>
+        </Menu>
+      </menus>
+    </MenuBar>
+    <AnchorPane maxHeight="-1.0" maxWidth="-1.0" prefHeight="-1.0" prefWidth="-1.0" VBox.vgrow="ALWAYS">
+         <children>
+            <Button layoutX="434.0" layoutY="121.0" mnemonicParsing="false" onAction="#add" prefHeight="25.0" prefWidth="68.0" text="add new" />
+            <Button layoutX="434.0" layoutY="170.0" mnemonicParsing="false" onAction="#delete" text="delete" />
+            <ListView fx:id="listView" layoutX="33.0" layoutY="52.0" prefHeight="261.0" prefWidth="315.0" />
+            <Label layoutX="145.0" layoutY="27.0" prefHeight="17.0" prefWidth="108.0" text="list of workers" />
+            <Button layoutX="510.0" layoutY="323.0" mnemonicParsing="false" text="back" onAction="#back" />
+         </children>
+    </AnchorPane>
+  </children>
+</VBox>

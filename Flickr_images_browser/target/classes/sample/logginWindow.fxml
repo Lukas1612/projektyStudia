@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox prefHeight="400.0" prefWidth="640.0" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.loginController">
+  <children>
+    <MenuBar VBox.vgrow="NEVER">
+      <menus>
+        <Menu mnemonicParsing="false" text="File">
+          <items>
+            <MenuItem mnemonicParsing="false" text="New" />
+            <MenuItem mnemonicParsing="false" text="Open…" />
+            <Menu mnemonicParsing="false" text="Open Recent" />
+            <SeparatorMenuItem mnemonicParsing="false" />
+            <MenuItem mnemonicParsing="false" text="Close" />
+            <MenuItem mnemonicParsing="false" text="Save" />
+            <MenuItem mnemonicParsing="false" text="Save As…" />
+            <MenuItem mnemonicParsing="false" text="Revert" />
+            <SeparatorMenuItem mnemonicParsing="false" />
+            <MenuItem mnemonicParsing="false" text="Preferences…" />
+            <SeparatorMenuItem mnemonicParsing="false" />
+            <MenuItem mnemonicParsing="false" text="Quit" />
+          </items>
+        </Menu>
+        <Menu mnemonicParsing="false" text="Edit">
+          <items>
+            <MenuItem mnemonicParsing="false" text="Undo" />
+            <MenuItem mnemonicParsing="false" text="Redo" />
+            <SeparatorMenuItem mnemonicParsing="false" />
+            <MenuItem mnemonicParsing="false" text="Cut" />
+            <MenuItem mnemonicParsing="false" text="Copy" />
+            <MenuItem mnemonicParsing="false" text="Paste" />
+            <MenuItem mnemonicParsing="false" text="Delete" />
+            <SeparatorMenuItem mnemonicParsing="false" />
+            <MenuItem mnemonicParsing="false" text="Select All" />
+            <MenuItem mnemonicParsing="false" text="Unselect All" />
+          </items>
+        </Menu>
+        <Menu mnemonicParsing="false" text="Help">
+          <items>
+            <MenuItem mnemonicParsing="false" text="About MyHelloApp" />
+          </items>
+        </Menu>
+      </menus>
+    </MenuBar>
+    <AnchorPane maxHeight="-1.0" maxWidth="-1.0" prefHeight="-1.0" prefWidth="-1.0" VBox.vgrow="ALWAYS">
+      <children>
+            <TextField fx:id="logginField" layoutX="157.0" layoutY="78.0" prefHeight="25.0" prefWidth="279.0" />
+            <TextField fx:id="passwordField" layoutX="161.0" layoutY="136.0" prefHeight="25.0" prefWidth="279.0" />
+            <Label layoutX="67.0" layoutY="82.0" text="login" />
+            <Label layoutX="67.0" layoutY="140.0" text="passwordel" />
+            <Button fx:id="logginButton" layoutX="231.0" layoutY="198.0" mnemonicParsing="false" onAction="#loggin" prefHeight="25.0" prefWidth="150.0" text="login" />
+            <Button fx:id="createButton" layoutX="388.0" layoutY="242.0" mnemonicParsing="false" onAction="#createAccount" text="create account" />
+            <Label layoutX="205.0" layoutY="246.0" text="if you doesn't have an account" />
+            <Label layoutX="272.0" layoutY="111.0" />
+            <Label layoutX="272.0" layoutY="128.0" prefHeight="50.0" prefWidth="4.0" />
+            <Label fx:id="statementLabel" layoutX="240.0" layoutY="170.0" text="  " />
+            <Label layoutX="257.0" layoutY="289.0" text="delete account" />
+            <Button fx:id="delateButton" layoutX="388.0" layoutY="285.0" mnemonicParsing="false" onAction="#deleteAccount" text="delate account" />
+            <Button  fx:id="adminButton" layoutX="280.0" layoutY="327.0" mnemonicParsing="false" text="admin" onAction="#adminLoggin" />
+      </children>
+    </AnchorPane>
+  </children>
+</VBox>

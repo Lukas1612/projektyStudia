@@ -1,0 +1,41 @@
+<resources>
+    <string name="app_name">ReadyReadingKotlin</string>
+    <string name="title_home">English</string>
+    <string name="title_dashboard">Translated</string>
+    <string name="title_notifications">Flashcards</string>
+    <string name="title_test">Test</string>
+    <string name="title_questions">Questions</string>
+    <string name="title_answers">Answers</string>
+    <string name="title_activity_full_passage">MainActivity</string>
+    <string name="start_questionnaire">Start Questionnaire</string>
+    <string name="show_result">Show Result</string>
+    <string name="finish">Finish</string>
+    <string name="next">Next</string>
+    <string name="previous">Previous</string>
+    <string name="title_activity_settings">SettingsActivity</string>
+
+    <!-- Preference Titles -->
+    <string name="messages_header">Messages</string>
+    <string name="sync_header">Sync</string>
+
+    <!-- Messages Preferences -->
+    <string name="signature_title">Your signature</string>
+    <string name="reply_title">Default reply action</string>
+
+    <!-- Sync Preferences -->
+    <string name="sync_title">Sync email periodically</string>
+    <string name="attachment_title">Download incoming attachments</string>
+    <string name="attachment_summary_on">Automatically download attachments for incoming emails
+    </string>
+    <string name="attachment_summary_off">Only download attachments when manually requested</string>
+    <string name="title_activity_test">testActivity</string>
+    <!-- Strings used for fragments for navigation -->
+    <string name="first_fragment_label">First Fragment</string>
+    <string name="second_fragment_label">Second Fragment</string>
+
+    <string name="hello_first_fragment">Hello first fragment</string>
+    <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
+    <string name="title_activity_meanhwille">MeanhwilleActivity</string>
+    <string name="title_activity_meanhwille_k">MeanhwilleActivityK</string>
+</resources>
+
