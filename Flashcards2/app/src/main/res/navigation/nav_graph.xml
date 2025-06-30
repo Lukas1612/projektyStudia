@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/FragmentFlashcardGroupList">
+
+    <fragment
+        android:id="@+id/FragmentFlashcardGroupList"
+        android:name="com.example.flashcards2.presentation.feature_flashcards_list.groups_fragment.FragmentFlashcardGroupList"
+        android:label="@string/flashcard_groups_fragment_label"
+        tools:layout="@layout/fragment_flashcard_group_list">
+        <action
+            android:id="@+id/action_FragmentFlashcardGroupList_to_FragmentSelectedGroup"
+            app:destination="@id/FragmentSelectedGroup" />
+    </fragment>
+    <fragment
+        android:id="@+id/FragmentFlashcardsList"
+        android:name="com.example.flashcards2.presentation.feature_flashcards_list.flashcards_fragment.FragmentFlashcardsList"
+        android:label="@string/flashcard_list_fragment_label"
+        tools:layout="@layout/fragment_flashcards_list">
+    </fragment>
+
+    <fragment
+        android:id="@+id/FragmentSelectedGroup"
+        android:name="com.example.flashcards2.presentation.feature_flashcards_list.selected_group_fragment.FragmentSelectedGroup"
+        android:label="@string/selected_group_fragment_label"
+        tools:layout="@layout/fragment_selected_group">
+        <action
+            android:id="@+id/action_FragmentSelectedGroup_to_FragmentFlashcardsList"
+            app:destination="@id/FragmentFlashcardsList" />
+        <action
+            android:id="@+id/action_FragmentSelectedGroup_to_FlashcardActivity"
+            app:destination="@id/FlashcardActivity" />
+    </fragment>
+
+    <activity
+        android:id="@+id/FlashcardActivity"
+        android:name="com.example.flashcards2.presentation.feature_flashcard.FlashcardActivity"
+        android:label="@string/flashcard_activity">
+    </activity>
+</navigation>

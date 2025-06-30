@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/clear_all_selected"
+        android:title="clear all selected"
+        app:showAsAction="always"
+        android:icon="@drawable/ic_baseline_clear_24"
+        />
+    <item
+        android:id="@+id/multi_delete"
+        android:title="multi delete"
+        app:showAsAction="always"
+        android:icon="@drawable/ic_baseline_delete_24"
+        />
+
+    <item
+        android:id="@+id/move"
+        android:title="move"
+        app:showAsAction="always"
+        android:icon="@drawable/ic_baseline_drive_file_move_24"
+        />
+
+    <item
+        android:id="@+id/extract_pdf"
+        android:title="extract to pdf"
+        app:showAsAction="always"
+        android:icon="@drawable/ic_baseline_picture_as_pdf_24"
+        />
+</menu>
