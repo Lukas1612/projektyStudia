@@ -43,7 +43,8 @@ interface UserSightsRepository {
     fun getBookmarkedSights(): Flow<List<UserSight>>
 
     /**
-     * Gets sights visited by the user as a stream
+     * Gets only visited or not visited sights depending on the isVisited value
      */
-    fun getVisitedSights(): Flow<List<UserSight>>
+    fun getSightsByIsVisitedValue(isVisited: Boolean): Flow<List<UserSight>>
+
 }

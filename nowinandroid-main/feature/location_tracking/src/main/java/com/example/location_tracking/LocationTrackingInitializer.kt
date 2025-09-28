@@ -16,12 +16,9 @@
 
 package com.example.location_tracking
 
-import android.location.Location
-import kotlinx.coroutines.flow.Flow
+import android.content.Context
+import com.example.location_tracking.data.LocationTrackingData
 
-
-interface LocationClient {
-    fun getLocationUpdates(interval: Long): Flow<Location>
-
-    class LocationException(message: String): Exception()
+interface LocationTrackingInitializer {
+    fun startLocationTracking(context: Context, locationTrackingData: LocationTrackingData)
 }

@@ -31,9 +31,13 @@ interface UserDataSightsRepository {
     fun getVisitedSightsIds(): Flow<Set<String>>
 
     /**
+     *Gets the visited sights ids as a stream
+     */
+    fun getUnvisitedSightsIds(): Flow<Set<String>>
+
+    /**
      * Updates the bookmarked status for a sight
      */
-
     suspend fun setSightBookmarked(sightId: String, bookmarked: Boolean)
 
     /**

@@ -46,4 +46,5 @@ dependencies {
 
     implementation(projects.feature.permissions)
     implementation(projects.core.notifications)
+    implementation(projects.core.domain)
 }

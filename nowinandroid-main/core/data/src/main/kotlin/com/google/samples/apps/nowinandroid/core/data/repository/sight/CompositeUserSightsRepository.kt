@@ -97,14 +97,21 @@ class CompositeUserSightsRepository @Inject constructor(
         }
     }
 
-    override fun getVisitedSights(): Flow<List<UserSight>> {
-        val sightsFlow = userDataSightsRepository.getVisitedSightsIds()
-            .flatMapLatest { visitedSightsIds ->
+    override fun getSightsByIsVisitedValue(isVisited: Boolean): Flow<List<UserSight>>{
+        val sightsIdsFlow = if(isVisited){
+            userDataSightsRepository.getVisitedSightsIds()
+        }else{
+            userDataSightsRepository.getUnvisitedSightsIds()
+        }
+
+        val sightsFlow = sightsIdsFlow
+            .flatMapLatest { sightsIds ->
                 when {
-                    visitedSightsIds.isEmpty() -> flowOf(emptyList())
-                    else -> sightsRepository.getById(visitedSightsIds)
+                    sightsIds.isEmpty() -> flowOf(emptyList())
+                    else -> sightsRepository.getById(sightsIds)
                 }
             }
+
         val bookmarkedSightsIdsFlow = userDataSightsRepository.getBookmarkedSightsIds()
 
         return combine(sightsFlow, bookmarkedSightsIdsFlow){ sights, bookmarked ->
@@ -117,5 +124,4 @@ class CompositeUserSightsRepository @Inject constructor(
             }
         }
     }
-
 }

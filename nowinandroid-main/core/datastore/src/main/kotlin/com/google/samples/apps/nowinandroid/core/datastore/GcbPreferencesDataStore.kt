@@ -37,6 +37,10 @@ class GcbPreferencesDataStore@Inject constructor(
         .map { prefs ->
             prefs.visitedSightsIdsMap.filterValues { it }.keys
         }
+    val unvisitedSightsIds: Flow<Set<String>> = userPreferencesFlow
+        .map { prefs ->
+            prefs.visitedSightsIdsMap.filterValues { !it }.keys
+        }
 
     suspend fun setSightBookmarked(sightId: String, bookmarked: Boolean){
         try {

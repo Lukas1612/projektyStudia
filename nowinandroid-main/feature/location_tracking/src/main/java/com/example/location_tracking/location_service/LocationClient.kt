@@ -14,17 +14,13 @@
  * limitations under the License.
  */
 
-package com.google.samples.apps.nowinandroid.core.domain.sights
+package com.example.location_tracking.location_service
 
-import com.google.samples.apps.nowinandroid.core.data.repository.sight.UserSightsRepository
-import com.google.samples.apps.nowinandroid.core.model.data.sight.UserSight
+import android.location.Location
 import kotlinx.coroutines.flow.Flow
-import javax.inject.Inject
 
-class GetVisitedSightsUseCase @Inject constructor(
-    private val repository: UserSightsRepository
-) {
-    operator fun invoke(): Flow<List<UserSight>> {
-        return repository.getVisitedSights()
-    }
+interface LocationClient {
+    fun getLocationUpdates(intervalMilliseconds: Long): Flow<Location>
+
+    class LocationException(message: String): Exception()
 }

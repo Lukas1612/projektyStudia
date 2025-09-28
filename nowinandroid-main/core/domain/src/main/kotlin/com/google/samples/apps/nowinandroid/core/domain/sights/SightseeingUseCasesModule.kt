@@ -31,7 +31,7 @@ object SightseeingUseCasesModule {
     fun provideSightseeingUseCases(
         bookmarkSightUseCase: BookmarkSightUseCase,
         getBookmarkedSightsUseCase: GetBookmarkedSightsUseCase,
-        getVisitedSightsUseCase: GetVisitedSightsUseCase,
+        getSightsByIsVisitedValueUseCase: GetSightsByIsVisitedValueUseCase,
         getSightsOfAGivenTypeUseCase: GetSightsOfAGivenTypeUseCase,
         visitSightUseCase: VisitSightUseCase,
         getAllSightsUseCase: GetAllSightsUseCase,
@@ -41,7 +41,7 @@ object SightseeingUseCasesModule {
         return SightseeingUseCases(
             bookmarkSightUseCase,
             getBookmarkedSightsUseCase,
-            getVisitedSightsUseCase,
+            getSightsByIsVisitedValueUseCase,
             getSightsOfAGivenTypeUseCase,
             visitSightUseCase,
             getAllSightsUseCase,

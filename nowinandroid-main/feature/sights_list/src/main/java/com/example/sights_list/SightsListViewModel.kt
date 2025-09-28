@@ -23,7 +23,7 @@ import androidx.annotation.RequiresApi
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.location_tracking.LocationService
+import com.example.location_tracking.location_service.LocationService
 import com.google.samples.apps.nowinandroid.core.domain.sights.SightseeingUseCases
 import com.google.samples.apps.nowinandroid.core.model.data.sight.Sight
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -33,6 +33,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
@@ -124,9 +125,9 @@ class SightsListViewModel @Inject constructor(
     private var getSightsJob: Job? = null
 
     init {
-        /*viewModelScope.launch {
+        viewModelScope.launch {
             useCases.addSightsUseCase(sampleSights)
-        }*/
+        }
         loadSights()
     }
 
@@ -184,7 +185,7 @@ class SightsListViewModel @Inject constructor(
 
     private fun getVisitedSights(){
         getSightsJob?.cancel()
-        getSightsJob = useCases.getVisitedSightsUseCase()
+        getSightsJob = useCases.getSightsByIsVisitedValueUseCase(true)
             .onEach { updatedList ->
                 _state.update { previousView ->
                     previousView.copy(

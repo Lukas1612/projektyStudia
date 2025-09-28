@@ -14,15 +14,19 @@
  * limitations under the License.
  */
 
-package com.google.samples.apps.nowinandroid.core.domain.sights
+package com.example.location_tracking.data
 
-data class SightseeingUseCases(
-    val bookmarkSightUseCase: BookmarkSightUseCase,
-    val getBookmarkedSightsUseCase: GetBookmarkedSightsUseCase,
-    val getSightsByIsVisitedValueUseCase: GetSightsByIsVisitedValueUseCase,
-    val getSightsOfAGivenTypeUseCase: GetSightsOfAGivenTypeUseCase,
-    val visitSightUseCase: VisitSightUseCase,
-    val getAllSightsUseCase: GetAllSightsUseCase,
-    val getSightByIdUseCase: GetSightByIdUseCase,
-    val addSightsUseCase: AddSightsUseCase
+import android.location.Location
+import com.google.samples.apps.nowinandroid.core.model.data.sight.Sight
+
+data class LocationTrackingData(
+    val targets: List<Sight>,
+    val sphere: Sphere
 )
+
+class Sphere(
+    val center: Location,
+    val radius: Float
+)
+
+const val TARGETS_LIMIT = 10

@@ -16,13 +16,16 @@
 
 package com.google.samples.apps.nowinandroid.core.domain.sights
 
-data class SightseeingUseCases(
-    val bookmarkSightUseCase: BookmarkSightUseCase,
-    val getBookmarkedSightsUseCase: GetBookmarkedSightsUseCase,
-    val getSightsByIsVisitedValueUseCase: GetSightsByIsVisitedValueUseCase,
-    val getSightsOfAGivenTypeUseCase: GetSightsOfAGivenTypeUseCase,
-    val visitSightUseCase: VisitSightUseCase,
-    val getAllSightsUseCase: GetAllSightsUseCase,
-    val getSightByIdUseCase: GetSightByIdUseCase,
-    val addSightsUseCase: AddSightsUseCase
-)
+import com.google.samples.apps.nowinandroid.core.data.repository.sight.UserSightsRepository
+import com.google.samples.apps.nowinandroid.core.model.data.sight.UserSight
+import kotlinx.coroutines.flow.Flow
+import javax.inject.Inject
+
+
+class GetSightsByIsVisitedValueUseCase @Inject constructor(
+    private val repository: UserSightsRepository
+) {
+    operator fun invoke(isVisited: Boolean): Flow<List<UserSight>> {
+        return repository.getSightsByIsVisitedValue(isVisited)
+    }
+}
