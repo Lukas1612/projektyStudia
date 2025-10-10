@@ -16,7 +16,7 @@
 
 package com.google.samples.apps.nowinandroid.core.notifications
 
-import com.google.samples.apps.nowinandroid.core.notifications.sight.DefaultNotificationHelper
+import com.google.samples.apps.nowinandroid.core.notifications.sight.LocationNotifier
 import com.google.samples.apps.nowinandroid.core.notifications.sight.NotificationHelper
 import dagger.Binds
 import dagger.Module
@@ -33,6 +33,6 @@ internal abstract class NotificationsModule {
 
     @Binds
     abstract fun bindNotificationHelper(
-        notificationHelper: DefaultNotificationHelper
+        notificationHelper: LocationNotifier
     ): NotificationHelper
 }

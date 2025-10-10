@@ -23,5 +23,4 @@ import com.google.samples.apps.nowinandroid.core.model.data.NewsResource
  */
 interface Notifier {
     fun postNewsNotifications(newsResources: List<NewsResource>)
-    fun postLocationNotification(lat: Double, lng: Double)
 }

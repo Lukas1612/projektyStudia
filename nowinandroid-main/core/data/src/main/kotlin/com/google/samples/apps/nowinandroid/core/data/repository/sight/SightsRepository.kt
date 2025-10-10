@@ -37,7 +37,7 @@ interface SightsRepository {
     /**
      * Returns the Sight with specified id
      */
-    fun getById(ids: String): Flow<Sight>
+    suspend fun getById(id: String): Sight
 
     /**
      * Insert sights into database

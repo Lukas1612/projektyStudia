@@ -96,10 +96,6 @@ internal class SystemTrayNotifier @Inject constructor(
         notificationManager.notify(NEWS_NOTIFICATION_SUMMARY_ID, summaryNotification)
     }
 
-    override fun postLocationNotification(lat: Double, lng: Double) {
-        //do nothing
-    }
-
     /**
      * Creates an inbox style summary notification for news updates
      */

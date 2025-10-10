@@ -24,9 +24,11 @@ data class LocationTrackingData(
     val sphere: Sphere
 )
 
-class Sphere(
+data class Sphere(
     val center: Location,
     val radius: Float
 )
 
 const val TARGETS_LIMIT = 10
+const val LONG_RANGE_TRACKING_MINIMAL_RADIUS = 100f
+const val VISIT_SIGHT_MINIMAL_DISTANCE = 10f

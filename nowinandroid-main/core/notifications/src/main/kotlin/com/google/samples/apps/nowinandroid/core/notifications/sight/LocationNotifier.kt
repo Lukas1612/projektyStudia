@@ -21,6 +21,7 @@ import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.Service
 import android.content.Context
+import android.location.Location
 import android.os.Build.VERSION
 import android.os.Build.VERSION_CODES
 import androidx.annotation.RequiresPermission
@@ -36,18 +37,23 @@ import javax.inject.Singleton
 private const val NOTIFICATION_CHANNEL_ID = "location_id"
 private const val NOTIFICATION_CHANNEL_NAME = "Location"
 private const val LOCATION_NOTIFICATION_ID =  1
+private const val VISITED_LOCATION_NOTIFICATION_ID =  2
 
 @Singleton
-internal class DefaultNotificationHelper@Inject constructor(
+internal class LocationNotifier @Inject constructor(
     @ApplicationContext private val context: Context,
 ): NotificationHelper{
 
-    private val _locationNotification: NotificationCompat.Builder by lazy {
-        context.createLocationNotification()
+    /* private val locationNotification: NotificationCompat.Builder by lazy {
+         context.createLocationNotification()
+     }*/
+
+    private val locationTrackingNotification: NotificationCompat.Builder by lazy {
+        createLocationTrackingNotification()
     }
 
     @RequiresPermission(permission.POST_NOTIFICATIONS)
-    override fun updateLocationNotification(lat: String, lng: String){
+    override fun updateLocationNotification(userLocation: Location, sightLocation: Location){
 
         if (!context.hasPostNotificationsPermission()) {
             return
@@ -55,22 +61,51 @@ internal class DefaultNotificationHelper@Inject constructor(
 
         val notificationManager = NotificationManagerCompat.from(context)
 
-        _locationNotification.setContentText(
-            "Location: ($lat, $lng)"
+        val distanceToSight = userLocation.distanceTo(sightLocation)
+
+        locationTrackingNotification.setContentText(
+            "distance to sight: ($distanceToSight)"
         )
 
-        notificationManager.notify(LOCATION_NOTIFICATION_ID, _locationNotification.build())
+        notificationManager.notify(LOCATION_NOTIFICATION_ID, locationTrackingNotification.build())
     }
 
     override fun startForeground(service: Service) {
-        service.startForeground(LOCATION_NOTIFICATION_ID, _locationNotification.build())
+        service.startForeground(LOCATION_NOTIFICATION_ID, locationTrackingNotification.build())
+    }
+
+    override fun cancelLocationNotification() {
+        NotificationManagerCompat.from(context).cancel(LOCATION_NOTIFICATION_ID)
+    }
+
+    @RequiresPermission(permission.POST_NOTIFICATIONS)
+    override fun youHaveVisitedNewSightNotification(sightName: String) {
+        val visitedSightNotification = createVisitedSightNotification(sightName)
+        NotificationManagerCompat.from(context).notify(VISITED_LOCATION_NOTIFICATION_ID, visitedSightNotification.build())
+    }
+
+    private fun createLocationTrackingNotification(): NotificationCompat.Builder {
+        return context.createLocationNotification{
+            setContentTitle("Tracking location...")
+                .setContentText("distance to sight: null")
+                .setSmallIcon(R.drawable.outline_my_location_24)
+                .setOngoing(true)
+        }
+    }
+
+    private fun createVisitedSightNotification(sightName: String): NotificationCompat.Builder{
+        return context.createLocationNotification{
+            setContentTitle("You visited a new sight...")
+                .setContentText("visited sight: $sightName")
+                .setSmallIcon(R.drawable.outline_bookmark_check_24)
+        }
     }
 }
 
 /**
  * Creates a notification for configured for news updates
  */
-private fun Context.createLocationNotification(): NotificationCompat.Builder{
+/*private fun Context.createLocationNotification(): NotificationCompat.Builder{
     ensureNotificationChannelExists()
     return NotificationCompat.Builder(
         this,
@@ -81,6 +116,21 @@ private fun Context.createLocationNotification(): NotificationCompat.Builder{
         .setSmallIcon(R.drawable.outline_my_location_24)
         .setPriority(NotificationCompat.PRIORITY_DEFAULT)
         .setOngoing(true)
+}*/
+
+/**
+ * Creates a notification for location updates
+ */
+private fun Context.createLocationNotification(
+    block: NotificationCompat.Builder.() -> Unit,
+): NotificationCompat.Builder {
+    ensureNotificationChannelExists()
+    return NotificationCompat.Builder(
+        this,
+        NOTIFICATION_CHANNEL_ID,
+    )
+        .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+        .apply(block)
 }
 
 /**

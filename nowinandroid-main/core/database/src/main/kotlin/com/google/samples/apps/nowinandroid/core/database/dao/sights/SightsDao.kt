@@ -36,7 +36,7 @@ interface SightsDao {
     fun getSightEntitiesById(ids: List<String>) : Flow<List<SightEntity>>
 
     @Query("SELECT * FROM sights WHERE id = :id")
-    fun getSightEntityById(id: String) : Flow<SightEntity>
+    suspend fun getSightEntityById(id: String) : SightEntity
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertSights(items: List<SightEntity>)

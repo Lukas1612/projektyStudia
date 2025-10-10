@@ -24,8 +24,4 @@ import javax.inject.Inject
  */
 internal class NoOpNotifier @Inject constructor() : Notifier {
     override fun postNewsNotifications(newsResources: List<NewsResource>) = Unit
-    override fun postLocationNotification(lat: Double, lng: Double) {
-
-        // do nothing
-    }
 }

@@ -14,11 +14,13 @@
  * limitations under the License.
  */
 
-package com.example.location_tracking
+package com.example.location_tracking.close_range_location_tracking
 
-import android.content.Context
-import com.example.location_tracking.data.LocationTrackingData
+import android.location.Location
+import kotlinx.coroutines.flow.Flow
 
-interface LocationTrackingInitializer {
-    fun startLocationTracking(context: Context, locationTrackingData: LocationTrackingData)
+interface CloseRangeLocationClient {
+    fun getLocationUpdates(intervalMilliseconds: Long): Flow<Location>
+
+    class LocationException(message: String): Exception()
 }

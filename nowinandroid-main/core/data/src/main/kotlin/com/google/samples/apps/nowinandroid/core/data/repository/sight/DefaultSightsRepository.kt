@@ -46,9 +46,8 @@ class DefaultSightsRepository @Inject constructor(
         sightsDao.getSightEntitiesById(ids.toList())
             .map { it.map(SightEntity::asExternalModel)  }
 
-    override fun getById(id: String): Flow<Sight> =
-        sightsDao.getSightEntityById(id)
-            .map { it.asExternalModel() }
+    override suspend fun getById(id: String): Sight =
+        sightsDao.getSightEntityById(id).asExternalModel()
 
     override suspend fun addSights(sights: List<Sight>) {
         sightsDao.insertSights(sights.map { it.asExternalModel()})

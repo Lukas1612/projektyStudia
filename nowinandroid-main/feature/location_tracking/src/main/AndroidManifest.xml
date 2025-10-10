@@ -5,6 +5,7 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
 
     <uses-permission
         android:name="android.permission.FOREGROUND_SERVICE_LOCATION"
@@ -12,11 +13,22 @@
 
     <application>
         <service
-            android:name=".location_service.LocationService"
+            android:name=".close_range_location_tracking.CloseRangeLocationService"
             android:enabled="true"
             android:exported="true"
             android:foregroundServiceType="location"
             />
+
+        <receiver
+            android:name=".long_range_location_tracking.SightGeofenceBroadcastReceiver"
+            android:enabled="true"
+            android:exported="true"/>
+        <receiver
+            android:name=".long_range_location_tracking.SphereGeofenceBroadcastReceiver"
+            android:enabled="true"
+            android:exported="true"/>
     </application>
+
+
 
 </manifest>

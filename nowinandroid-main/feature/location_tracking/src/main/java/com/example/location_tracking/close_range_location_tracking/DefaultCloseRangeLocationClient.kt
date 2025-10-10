@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.example.location_tracking.location_service
+package com.example.location_tracking.close_range_location_tracking
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -32,16 +32,16 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.launch
 
-class DefaultLocationClient(
+class DefaultCloseRangeLocationClient(
     private val context: Context,
     private val client: FusedLocationProviderClient
-): LocationClient {
+): CloseRangeLocationClient {
 
     @SuppressLint("MissingPermission")
     override fun getLocationUpdates(intervalMilliseconds: Long): Flow<Location> {
         return callbackFlow {
             if (!context.hasLocationPermission()) {
-                throw LocationClient.LocationException("Missing location permission")
+                throw CloseRangeLocationClient.LocationException("Missing location permission")
             }
 
             val locationManager =
@@ -50,13 +50,14 @@ class DefaultLocationClient(
             val isNetworkEnabled =
                 locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)
             if (!isGpsEnabled && !isNetworkEnabled) {
-                throw LocationClient.LocationException("GPS is disabled")
+                throw CloseRangeLocationClient.LocationException("GPS is disabled")
             }
 
-            val request = LocationRequest.Builder(Priority.PRIORITY_HIGH_ACCURACY, intervalMilliseconds)
-                .setWaitForAccurateLocation(false)
-                .setMinUpdateIntervalMillis(intervalMilliseconds)
-                .build()
+            val request =
+                LocationRequest.Builder(Priority.PRIORITY_HIGH_ACCURACY, intervalMilliseconds)
+                    .setWaitForAccurateLocation(false)
+                    .setMinUpdateIntervalMillis(intervalMilliseconds)
+                    .build()
 
             val locationCallback = object : LocationCallback() {
                 override fun onLocationResult(result: LocationResult) {

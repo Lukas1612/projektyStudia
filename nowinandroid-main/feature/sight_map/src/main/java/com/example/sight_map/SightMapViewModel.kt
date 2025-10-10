@@ -18,6 +18,8 @@ package com.example.sight_map
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.sight_map.Constants.DEFAULT_INITIAL_LOCATION
 import com.example.sight_map.Constants.INITIAL_LOCATION_LATITUDE_KEY
 import com.example.sight_map.Constants.INITIAL_LOCATION_LONGITUDE_KEY
@@ -27,7 +29,9 @@ import com.google.samples.apps.nowinandroid.core.domain.sights.SightseeingUseCas
 import com.google.samples.apps.nowinandroid.core.model.data.sight.Sight
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
@@ -50,11 +54,13 @@ class SightMapViewModel @Inject constructor(
         }
     }
 
-    private fun getChosenSight(): Flow<List<Sight>> {
+    private fun getChosenSight(): Flow<List<Sight>> = flow {
         val selectedSightId: String = requireNotNull(savedStateHandle[SELECTED_SIGHT_ID_KEY]) {
             "SELECTED_SIGHT_ID_KEY is missing in SavedStateHandle"
         }
-        return useCases.getSightByIdUseCase(selectedSightId).map { listOf(it.sight) }
+
+        val sight = useCases.getSightByIdUseCase(selectedSightId).sight// suspending function call
+        emit(listOf(sight))
     }
 
     private fun getAllSights(): Flow<List<Sight>> {

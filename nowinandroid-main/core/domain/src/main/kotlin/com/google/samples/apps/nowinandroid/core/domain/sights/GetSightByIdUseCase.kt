@@ -18,13 +18,12 @@ package com.google.samples.apps.nowinandroid.core.domain.sights
 
 import com.google.samples.apps.nowinandroid.core.data.repository.sight.UserSightsRepository
 import com.google.samples.apps.nowinandroid.core.model.data.sight.UserSight
-import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 class GetSightByIdUseCase @Inject constructor(
     private val repository: UserSightsRepository
 ) {
-     operator fun invoke(sightId: String): Flow<UserSight> {
+     suspend operator fun invoke(sightId: String): UserSight {
        return repository.getSightById(sightId)
     }
 }

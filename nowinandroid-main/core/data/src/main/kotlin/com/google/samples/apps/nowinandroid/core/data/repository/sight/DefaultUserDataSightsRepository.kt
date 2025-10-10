@@ -28,8 +28,6 @@ class DefaultUserDataSightsRepository @Inject constructor(
 
     override fun getVisitedSightsIds(): Flow<Set<String>> = gcbPreferencesDataStore.visitedSightsIds
 
-    override fun getUnvisitedSightsIds(): Flow<Set<String>> = gcbPreferencesDataStore.unvisitedSightsIds
-
     override suspend fun setSightBookmarked(sightId: String, bookmarked: Boolean) {
         gcbPreferencesDataStore.setSightBookmarked(sightId, bookmarked)
     }

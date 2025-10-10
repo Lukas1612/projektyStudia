@@ -17,16 +17,16 @@
 package com.example.sights_list
 
 import android.content.Context
-import android.content.Intent
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.location_tracking.location_service.LocationService
+import com.example.location_tracking.long_range_location_tracking.LongRangeLocationTrackingInitializer
 import com.google.samples.apps.nowinandroid.core.domain.sights.SightseeingUseCases
 import com.google.samples.apps.nowinandroid.core.model.data.sight.Sight
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -38,8 +38,10 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SightsListViewModel @Inject constructor(
+    @ApplicationContext private val context: Context,
     savedStateHandle: SavedStateHandle,
-    private val useCases: SightseeingUseCases
+    private val useCases: SightseeingUseCases,
+    private val longRangeLocationTrackingInitializer: LongRangeLocationTrackingInitializer
 ) : ViewModel() {
 
     //********************
@@ -133,16 +135,16 @@ class SightsListViewModel @Inject constructor(
 
     @RequiresApi(Build.VERSION_CODES.O)
     fun startService(context: Context) {
-        val intent = Intent(context, LocationService::class.java)
-        intent.setAction(LocationService.ACTION_START)
-        context.startForegroundService(intent)
+
+        longRangeLocationTrackingInitializer.startLocationTracking(
+            context,
+            viewModelScope
+        )
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
     fun stopService(context: Context) {
-        val intent = Intent(context, LocationService::class.java)
-        intent.setAction(LocationService.ACTION_STOP)
-        context.startForegroundService(intent)
+        longRangeLocationTrackingInitializer.stopLocationTracking(context)
     }
 
    private fun loadSights(){
@@ -165,10 +167,6 @@ class SightsListViewModel @Inject constructor(
                 }
             }
 
-    }
-
-    suspend fun visitSight(sightId: String){
-        useCases.visitSightUseCase(sightId)
     }
 
     private fun getBookmarkedSights(){

@@ -16,9 +16,12 @@
 
 package com.google.samples.apps.nowinandroid.core.data.repository.sight
 
+import android.util.Log
 import com.google.samples.apps.nowinandroid.core.model.data.sight.UserSight
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.filterNot
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOf
@@ -45,19 +48,16 @@ class CompositeUserSightsRepository @Inject constructor(
         }
     }
 
-    override fun getSightById(id: String): Flow<UserSight>{
+    override suspend fun getSightById(id: String): UserSight{
+        val sight = sightsRepository.getById(id)
+        val visitedSightsIds = userDataSightsRepository.getVisitedSightsIds().first()
+        val bookmarkedSightsIds = userDataSightsRepository.getBookmarkedSightsIds().first()
 
-        val sightsFlow = sightsRepository.getById(id)
-        val visitedSightsIdsFlow = userDataSightsRepository.getVisitedSightsIds()
-        val bookmarkedSightsIdsFlow = userDataSightsRepository.getBookmarkedSightsIds()
-
-        return combine(sightsFlow, visitedSightsIdsFlow, bookmarkedSightsIdsFlow){ sight, visited, bookmarked ->
-            UserSight(
-                sight = sight,
-                isVisited = visited.contains(sight.id),
-                isBookmarked = bookmarked.contains(sight.id),
-            )
-        }
+        return UserSight(
+            sight = sight,
+            isVisited = sight.id in visitedSightsIds,
+            isBookmarked = sight.id in bookmarkedSightsIds
+        )
     }
 
     override fun getSightsByType(type: String): Flow<List<UserSight>> {
@@ -98,30 +98,31 @@ class CompositeUserSightsRepository @Inject constructor(
     }
 
     override fun getSightsByIsVisitedValue(isVisited: Boolean): Flow<List<UserSight>>{
-        val sightsIdsFlow = if(isVisited){
-            userDataSightsRepository.getVisitedSightsIds()
-        }else{
-            userDataSightsRepository.getUnvisitedSightsIds()
-        }
 
-        val sightsFlow = sightsIdsFlow
-            .flatMapLatest { sightsIds ->
-                when {
-                    sightsIds.isEmpty() -> flowOf(emptyList())
-                    else -> sightsRepository.getById(sightsIds)
-                }
-            }
+         val allSightsFlow = sightsRepository.getAll()
+         val visitedSightsIdsFlow = userDataSightsRepository.getVisitedSightsIds()
+         val bookmarkedSightsIdsFlow = userDataSightsRepository.getBookmarkedSightsIds()
 
-        val bookmarkedSightsIdsFlow = userDataSightsRepository.getBookmarkedSightsIds()
-
-        return combine(sightsFlow, bookmarkedSightsIdsFlow){ sights, bookmarked ->
-            sights.map { sight ->
-                UserSight(
-                    sight = sight,
-                    isVisited = true,
-                    isBookmarked = bookmarked.contains(sight.id)
-                )
-            }
-        }
+         return combine(allSightsFlow, visitedSightsIdsFlow, bookmarkedSightsIdsFlow){ all, visited, bookmarked ->
+             if(isVisited){
+                 all.filter { it.id in visited}
+                     .map { sight ->
+                         UserSight(
+                             sight = sight,
+                             isVisited = true,
+                             isBookmarked = bookmarked.contains(sight.id)
+                         )
+                     }
+             }else{
+                 all.filterNot { it.id in visited}
+                     .map { sight ->
+                         UserSight(
+                             sight = sight,
+                             isVisited = false,
+                             isBookmarked = bookmarked.contains(sight.id)
+                         )
+                     }
+             }
+         }
     }
 }

@@ -16,10 +16,12 @@
 
 package com.google.samples.apps.nowinandroid.core.notifications.sight
 
-import android.app.Notification
 import android.app.Service
+import android.location.Location
 
 interface NotificationHelper {
-    fun updateLocationNotification(lat: String, lng: String)
+    fun updateLocationNotification(userLocation: Location, sightLocation: Location)
     fun startForeground(service: Service)
+    fun cancelLocationNotification()
+    fun youHaveVisitedNewSightNotification(sightName: String)
 }

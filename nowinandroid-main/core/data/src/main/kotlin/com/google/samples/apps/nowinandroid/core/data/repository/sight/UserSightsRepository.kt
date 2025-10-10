@@ -30,7 +30,7 @@ interface UserSightsRepository {
     /**
      * Gets sight of a given id as a stream
      */
-    fun getSightById(id: String): Flow<UserSight>
+    suspend fun getSightById(id: String): UserSight
 
     /**
      * Gets the available sights of a given type as a stream
