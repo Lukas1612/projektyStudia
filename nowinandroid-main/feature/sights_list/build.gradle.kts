@@ -15,7 +15,6 @@ dependencies {
     implementation(projects.core.domain)
     implementation(projects.core.notifications)
     implementation(projects.feature.sightMap)
-    implementation(projects.feature.locationTracking)
 
     testImplementation(libs.hilt.android.testing)
     testImplementation(libs.robolectric)
@@ -24,7 +23,6 @@ dependencies {
     androidTestImplementation(libs.bundles.androidx.compose.ui.test)
     androidTestImplementation(projects.core.testing)
     implementation(libs.coil.compose.v240)
-    //implementation("io.coil-kt:coil-compose:2.4.0")
 
     implementation(libs.maps.compose)
     implementation(libs.play.services.maps)

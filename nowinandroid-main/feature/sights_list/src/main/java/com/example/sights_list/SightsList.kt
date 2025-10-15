@@ -42,7 +42,6 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.sight_map.MapData
 import kotlinx.coroutines.launch
 
-@RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SightsList(
@@ -55,9 +54,6 @@ fun SightsList(
     val sightListState by sightsListViewModel.state.collectAsState(
         initial = SightListState(emptyList())
     )
-
-    val context = LocalContext.current
-    sightsListViewModel.startService(context)
 
     Scaffold(
         topBar = {

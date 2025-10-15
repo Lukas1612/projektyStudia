@@ -13,7 +13,8 @@ dependencies {
     implementation(projects.core.domain)
 
     implementation(projects.feature.sightsList)
-    implementation(project(":feature:permissions"))
+    implementation(projects.feature.locationTracking)
+    implementation(projects.feature.permissions)
 
     testImplementation(libs.hilt.android.testing)
     testImplementation(libs.robolectric)

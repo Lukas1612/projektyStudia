@@ -14,10 +14,20 @@
  * limitations under the License.
  */
 
-package com.google.samples.apps.nowinandroid
+package com.example.permissions
 
-object Constants {
+import android.Manifest
+import android.os.Build
 
-    val NOTIFICATION_CHENNEL_ID = "location_id"
-    val NOTIFICATION_CHENNEL_NAME = "Location"
+object LocationPermissions {
+
+    fun getRequiredPermissions(): List<String> {
+        val base = listOf(
+            Manifest.permission.ACCESS_FINE_LOCATION,
+            Manifest.permission.ACCESS_COARSE_LOCATION
+        )
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            base + Manifest.permission.ACCESS_BACKGROUND_LOCATION
+        } else base
+    }
 }

@@ -16,12 +16,15 @@
 
 package com.example.home_screen
 
-import android.Manifest
-import android.annotation.SuppressLint
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
@@ -36,32 +39,12 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
-import com.example.permissions.PermissionBox
-
-@SuppressLint("MissingPermission")
-@Composable
-fun LocationUpdatesScreen() {
-    val permissions = listOf(
-        Manifest.permission.ACCESS_COARSE_LOCATION,
-        Manifest.permission.ACCESS_FINE_LOCATION,
-    )
-    // Requires at least coarse permission
-    PermissionBox(
-        permissions = permissions,
-        requiredPermissions = listOf(permissions.first()),
-    ) {
-        LocationUpdatesContent(
-            usePreciseLocation = it.contains(Manifest.permission.ACCESS_FINE_LOCATION),
-        )
-    }
-}
-
-@Composable
-fun LocationUpdatesContent(usePreciseLocation: Boolean) {
-
-}
+import androidx.hilt.navigation.compose.hiltViewModel
+import com.example.permissions.LocationPermissionFlow
 
 @Composable
 fun HomeScreen(
@@ -69,6 +52,7 @@ fun HomeScreen(
     onNavigateToMapOfSights: () -> Unit,
     onNavigateToFavourites: () -> Unit,
     onNavigateToVisited: () -> Unit,
+    homeScreenViewModel: HomeScreenViewModel = hiltViewModel()
 ) {
     val iconButtons  = listOf(
         Icons.Default.FormatListNumberedRtl to { onNavigateToSightsList() },
@@ -77,29 +61,48 @@ fun HomeScreen(
         Icons.Default.Checklist to { onNavigateToVisited() },
     )
 
-    LazyVerticalGrid(
-        columns = GridCells.Fixed(2),
-        contentPadding = PaddingValues(16.dp),
-        verticalArrangement = Arrangement.spacedBy(16.dp),
-        horizontalArrangement = Arrangement.spacedBy(16.dp),
-        modifier = Modifier.fillMaxSize()
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp)
     ) {
-        itemsIndexed(iconButtons) { index, (icon, action) ->
-            IconButton(
-                onClick = action,
-                modifier = Modifier
-                    .size(100.dp)
-                    .background(
-                        color = MaterialTheme.colorScheme.primary.copy(alpha = 0.1f),
-                        shape = CircleShape
+        LazyVerticalGrid(
+            columns = GridCells.Fixed(2),
+            contentPadding = PaddingValues(16.dp),
+            verticalArrangement = Arrangement.spacedBy(16.dp),
+            horizontalArrangement = Arrangement.spacedBy(16.dp),
+            modifier = Modifier
+                .weight(1f)  // take remaining vertical space
+                .fillMaxWidth()
+        ) {
+            itemsIndexed(iconButtons) { index, (icon, action) ->
+                IconButton(
+                    onClick = action,
+                    modifier = Modifier
+                        .size(100.dp)
+                        .background(
+                            color = MaterialTheme.colorScheme.primary.copy(alpha = 0.1f),
+                            shape = CircleShape
+                        )
+                ) {
+                    Icon(
+                        imageVector = icon,
+                        contentDescription = "Icon $index",
+                        tint = MaterialTheme.colorScheme.primary,
+                        modifier = Modifier.size(48.dp)
                     )
-            ) {
-                Icon(
-                    imageVector = icon,
-                    contentDescription = "Icon $index",
-                    tint = MaterialTheme.colorScheme.primary,
-                    modifier = Modifier.size(48.dp)
-                )
+                }
+            }
+        }
+
+        Spacer(Modifier.height(16.dp))
+
+        // create permissions buttons if not granted
+        // if permissions granted start tracking user location
+        val context = LocalContext.current
+        LocationPermissionFlow {
+            LaunchedEffect(Unit) {
+                homeScreenViewModel.startLocationService(context)
             }
         }
     }

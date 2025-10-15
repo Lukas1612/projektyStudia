@@ -26,8 +26,6 @@ import android.os.StrictMode
 import android.os.StrictMode.ThreadPolicy.Builder
 import coil.ImageLoader
 import coil.ImageLoaderFactory
-import com.google.samples.apps.nowinandroid.Constants.NOTIFICATION_CHENNEL_ID
-import com.google.samples.apps.nowinandroid.Constants.NOTIFICATION_CHENNEL_NAME
 import com.google.samples.apps.nowinandroid.sync.initializers.Sync
 import com.google.samples.apps.nowinandroid.util.ProfileVerifierLogger
 import dagger.hilt.android.HiltAndroidApp
